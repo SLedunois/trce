@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 160" width="440" height="160">
+  <defs>
+    <linearGradient id="purpleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#7c3aed"/>
+      <stop offset="100%" style="stop-color:#a855f7"/>
+    </linearGradient>
+
+    <linearGradient id="dotGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#7c3aed"/>
+      <stop offset="100%" style="stop-color:#c084fc"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="440" height="160" rx="20" fill="#fafafa"/>
+
+  <!-- ===================== -->
+  <!--        ICON           -->
+  <!-- ===================== -->
+
+  <!-- Outer circle — thin stroke -->
+  <circle cx="80" cy="80" r="46" fill="none" stroke="#e9d5ff" stroke-width="1.5"/>
+
+  <!-- Inner circle — accent -->
+  <circle cx="80" cy="80" r="32" fill="none" stroke="url(#purpleGrad)" stroke-width="1.5" stroke-dasharray="140 62" stroke-linecap="round"/>
+
+  <!-- Center dot -->
+  <circle cx="80" cy="80" r="8" fill="url(#dotGrad)"/>
+
+  <!-- Single top tick -->
+  <line x1="80" y1="28" x2="80" y2="38" stroke="url(#purpleGrad)" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- ===================== -->
+  <!--       WORDMARK        -->
+  <!-- ===================== -->
+
+  <!-- "trce" -->
+  <text
+    x="148"
+    y="100"
+    font-family="'SF Mono', 'Fira Code', 'JetBrains Mono', monospace"
+    font-weight="700"
+    font-size="64"
+    letter-spacing="-2"
+    fill="#1a0a2e"
+  >trce</text>
+
+  <!-- Accent underline -->
+  <rect x="148" y="112" width="190" height="2" rx="1" fill="url(#purpleGrad)"/>
+
+  <!-- Tagline -->
+  <text
+    x="149"
+    y="135"
+    font-family="'SF Mono', 'Fira Code', 'JetBrains Mono', monospace"
+    font-size="10.5"
+    font-weight="400"
+    letter-spacing="3"
+    fill="#a78bca"
+  >SSH RECORDER</text>
+
+</svg>

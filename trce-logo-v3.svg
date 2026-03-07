@@ -55,8 +55,8 @@
     font-family="'SF Mono', 'Fira Code', 'JetBrains Mono', monospace"
     font-size="10.5"
     font-weight="400"
-    letter-spacing="3"
+    letter-spacing="1"
     fill="#a78bca"
-  >SSH RECORDER</text>
+  >Terminal Replay &amp; Capture Engine</text>
 
 </svg>

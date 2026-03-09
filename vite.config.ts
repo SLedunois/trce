@@ -3,9 +3,12 @@ import react from '@vitejs/plugin-react'
 import adonisjs from '@adonisjs/vite/client'
 import inertia from '@adonisjs/inertia/vite'
 
+import tailwindcss from '@tailwindcss/vite'
+
 export default defineConfig({
   plugins: [
     react(),
+    tailwindcss(),
     inertia({ ssr: { enabled: false, entrypoint: 'inertia/ssr.tsx' } }),
     adonisjs({ entrypoints: ['inertia/app.tsx'], reload: ['resources/views/**/*.edge'] }),
   ],

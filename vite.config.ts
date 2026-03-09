@@ -21,6 +21,7 @@ export default defineConfig({
     alias: {
       '~/': `${import.meta.dirname}/inertia/`,
       '@generated': `${import.meta.dirname}/.adonisjs/client/`,
+      '@/': `${import.meta.dirname}/inertia/`,
     },
   },
 

@@ -1,0 +1,17 @@
+services:
+  db:
+    image: postgres:18
+    restart: always
+    shm_size: 128mb
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: trce
+      POSTGRES_USER: trce
+      POSTGRES_PASSWORD: trce
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080

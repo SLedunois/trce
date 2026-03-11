@@ -9,9 +9,14 @@ services:
       POSTGRES_DB: trce
       POSTGRES_USER: trce
       POSTGRES_PASSWORD: trce
+    volumes:
+      - db-data:/var/lib/postgresql
 
   adminer:
-    image: adminer
+    image: clidey/whodb
     restart: always
     ports:
       - 8080:8080
+
+volumes:
+  db-data:

@@ -2,7 +2,9 @@ export default function Home() {
   return (
     <>
       <div className="hero">
-        <h1>It works — welcome to the power of a full-stack React app</h1>
+        <h1 className="text-3xl font-bold underline">
+          It works — welcome to the power of a full-stack React app
+        </h1>
         <p>
           Powered by Inertia and React, this setup blends server-driven routing with rich
           client-side interactivity — seamless, fast, and cohesive.

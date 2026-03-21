@@ -11,8 +11,6 @@ import { middleware } from '#start/kernel'
 import { controllers } from '#generated/controllers'
 import router from '@adonisjs/core/services/router'
 
-router.on('/').renderInertia('home', {}).as('home')
-
 router
   .group(() => {
     router.get('signup', [controllers.NewAccount, 'create'])
@@ -25,6 +23,7 @@ router
 
 router
   .group(() => {
+    router.on('/').renderInertia('home', {}).as('home')
     router.post('logout', [controllers.Session, 'destroy'])
   })
   .use(middleware.auth())

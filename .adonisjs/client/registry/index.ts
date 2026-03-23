@@ -42,6 +42,18 @@ const routes = {
     tokens: [{"old":"/logout","type":0,"val":"logout","end":""}],
     types: placeholder as Registry['session.destroy']['types'],
   },
+  'password_changes.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/password/change',
+    tokens: [{"old":"/password/change","type":0,"val":"password","end":""},{"old":"/password/change","type":0,"val":"change","end":""}],
+    types: placeholder as Registry['password_changes.show']['types'],
+  },
+  'password_changes.update': {
+    methods: ["POST"],
+    pattern: '/password/change',
+    tokens: [{"old":"/password/change","type":0,"val":"password","end":""},{"old":"/password/change","type":0,"val":"change","end":""}],
+    types: placeholder as Registry['password_changes.update']['types'],
+  },
 } as const satisfies Record<string, AdonisEndpoint>
 
 export { routes }

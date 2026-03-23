@@ -26,4 +26,12 @@ router
     router.on('/').renderInertia('home', {}).as('home')
     router.post('logout', [controllers.Session, 'destroy'])
   })
-  .use(middleware.auth())
+  .use([middleware.auth(), middleware.forcePasswordChange()])
+
+// ✅ Route de changement de mot de passe : auth seulement (pas de boucle infinie !)
+router
+  .group(() => {
+    router.get('/password/change', [controllers.PasswordChanges, 'show'])
+    router.post('/password/change', [controllers.PasswordChanges, 'update'])
+  })
+  .use(middleware.auth()) // pas de forcePasswordChange ici

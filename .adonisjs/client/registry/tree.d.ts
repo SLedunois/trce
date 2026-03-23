@@ -12,4 +12,8 @@ export interface ApiDefinition {
     destroy: typeof routes['session.destroy']
   }
   home: typeof routes['home']
+  passwordChanges: {
+    show: typeof routes['password_changes.show']
+    update: typeof routes['password_changes.update']
+  }
 }

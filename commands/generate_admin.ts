@@ -40,14 +40,16 @@ export default class GenerateAdmin extends BaseCommand {
     const lowercase = 'abcdefghijklmnopqrstuvwxyz'
     const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
     const numbers = '0123456789'
+    const specialCaraters = '!@#$%^&*()_+'
 
-    const all = lowercase + uppercase + numbers
+    const all = lowercase + uppercase + numbers + specialCaraters
 
     let password = ''
 
     password += lowercase[crypto.randomInt(lowercase.length)]
     password += uppercase[crypto.randomInt(uppercase.length)]
     password += numbers[crypto.randomInt(numbers.length)]
+    password += specialCaraters[crypto.randomInt(specialCaraters.length)]
 
     for (let i = password.length; i < length; i++) {
       password += all[crypto.randomInt(all.length)]

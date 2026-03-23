@@ -6,15 +6,21 @@ import { Form, Link } from '@adonisjs/inertia/react'
 
 import TrceLogo from '~/images/trce-logo.svg'
 
-const unheaderedPages: string[] = ['/login']
+const unheaderedPages: string[] = ['/login', '/password/change']
 
 export default function Layout({ children }: { children: ReactElement<Data.SharedProps> }) {
   useEffect(() => {
     toast.dismiss()
   }, [usePage().url])
 
+  console.log(children.props.flash)
+
   if (children.props.flash.error) {
     toast.error(children.props.flash.error)
+  }
+
+  if (children.props.flash.success) {
+    toast.success(children.props.flash.success)
   }
 
   return (
@@ -29,19 +35,12 @@ export default function Layout({ children }: { children: ReactElement<Data.Share
             </div>
             <div>
               <nav>
-                {children.props.user ? (
-                  <>
-                    <span>{children.props.user.initials}</span>
-                    <Form route="session.destroy">
-                      <button type="submit">Logout</button>
-                    </Form>
-                  </>
-                ) : (
-                  <>
-                    <Link route="new_account.create">Signup</Link>
-                    <Link route="session.create">Login</Link>
-                  </>
-                )}
+                <>
+                  <span>{children.props.user?.initials}</span>
+                  <Form route="session.destroy">
+                    <button type="submit">Logout</button>
+                  </Form>
+                </>
               </nav>
             </div>
           </div>

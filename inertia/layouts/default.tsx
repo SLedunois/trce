@@ -13,8 +13,6 @@ export default function Layout({ children }: { children: ReactElement<Data.Share
     toast.dismiss()
   }, [usePage().url])
 
-  console.log(children.props.flash)
-
   if (children.props.flash.error) {
     toast.error(children.props.flash.error)
   }

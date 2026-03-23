@@ -1,6 +1,7 @@
 services:
   db:
     image: postgres:18
+    container_name: trce_db
     restart: always
     shm_size: 128mb
     ports:
@@ -12,11 +13,23 @@ services:
     volumes:
       - db-data:/var/lib/postgresql
 
-  adminer:
+  whodb:
     image: clidey/whodb
+    container_name: trce_whodb
     restart: always
     ports:
       - 8080:8080
+
+  mailpit:
+    image: axllent/mailpit
+    container_name: trce_mailpit
+    restart: unless-stopped
+    ports:
+      - 8025:8025
+    environment:
+      MP_MAX_MESSAGES: 5000
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
 
 volumes:
   db-data:

@@ -30,11 +30,29 @@ const routes = {
     tokens: [{"old":"/login","type":0,"val":"login","end":""}],
     types: placeholder as Registry['session.store']['types'],
   },
-  'home': {
+  'replays': {
     methods: ["GET","HEAD"],
-    pattern: '/',
-    tokens: [{"old":"/","type":0,"val":"/","end":""}],
-    types: placeholder as Registry['home']['types'],
+    pattern: '/replays',
+    tokens: [{"old":"/replays","type":0,"val":"replays","end":""}],
+    types: placeholder as Registry['replays']['types'],
+  },
+  'teams': {
+    methods: ["GET","HEAD"],
+    pattern: '/teams',
+    tokens: [{"old":"/teams","type":0,"val":"teams","end":""}],
+    types: placeholder as Registry['teams']['types'],
+  },
+  'users': {
+    methods: ["GET","HEAD"],
+    pattern: '/users',
+    tokens: [{"old":"/users","type":0,"val":"users","end":""}],
+    types: placeholder as Registry['users']['types'],
+  },
+  'profile': {
+    methods: ["GET","HEAD"],
+    pattern: '/profile',
+    tokens: [{"old":"/profile","type":0,"val":"profile","end":""}],
+    types: placeholder as Registry['profile']['types'],
   },
   'session.destroy': {
     methods: ["POST"],

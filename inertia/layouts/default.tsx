@@ -2,9 +2,10 @@ import { Data } from '@generated/data'
 import { toast, Toaster } from 'sonner'
 import { usePage } from '@inertiajs/react'
 import { ReactElement, useEffect } from 'react'
-import { Form, Link } from '@adonisjs/inertia/react'
 
-import TrceLogo from '~/images/trce-logo.svg'
+import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar'
+import { AppSidebar } from '@/components/app-sidebar'
+import { AppHeader } from '~/components/app-header'
 
 const unheaderedPages: string[] = ['/login', '/password/change']
 
@@ -23,28 +24,18 @@ export default function Layout({ children }: { children: ReactElement<Data.Share
 
   return (
     <>
-      {!unheaderedPages.includes(usePage().url) && (
-        <header>
-          <div>
-            <div>
-              <Link route="home">
-                <img src={TrceLogo} />
-              </Link>
-            </div>
-            <div>
-              <nav>
-                <>
-                  <span>{children.props.user?.initials}</span>
-                  <Form route="session.destroy">
-                    <button type="submit">Logout</button>
-                  </Form>
-                </>
-              </nav>
-            </div>
-          </div>
-        </header>
+      {!unheaderedPages.includes(usePage().url) ? (
+        <SidebarProvider>
+          <AppSidebar user={children.props.user} />
+          <SidebarInset>
+            <AppHeader />
+            <main>{children}</main>
+          </SidebarInset>
+        </SidebarProvider>
+      ) : (
+        <main>{children}</main>
       )}
-      <main>{children}</main>
+
       <Toaster position="top-center" richColors />
     </>
   )

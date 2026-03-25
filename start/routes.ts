@@ -23,7 +23,11 @@ router
 
 router
   .group(() => {
-    router.on('/').renderInertia('home', {}).as('home')
+    router.on('').redirect('replays')
+    router.on('replays').renderInertia('replays', {}).as('replays')
+    router.on('teams').renderInertia('teams', {}).as('teams')
+    router.on('users').renderInertia('users', {}).as('users')
+    router.on('profile').renderInertia('profile', {}).as('profile')
     router.post('logout', [controllers.Session, 'destroy'])
   })
   .use([middleware.auth(), middleware.forcePasswordChange()])

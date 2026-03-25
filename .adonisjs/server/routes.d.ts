@@ -8,7 +8,10 @@ export type ScannedRoutes = {
     'new_account.store': { paramsTuple?: []; params?: {} }
     'session.create': { paramsTuple?: []; params?: {} }
     'session.store': { paramsTuple?: []; params?: {} }
-    'home': { paramsTuple?: []; params?: {} }
+    'replays': { paramsTuple?: []; params?: {} }
+    'teams': { paramsTuple?: []; params?: {} }
+    'users': { paramsTuple?: []; params?: {} }
+    'profile': { paramsTuple?: []; params?: {} }
     'session.destroy': { paramsTuple?: []; params?: {} }
     'password_changes.show': { paramsTuple?: []; params?: {} }
     'password_changes.update': { paramsTuple?: []; params?: {} }
@@ -16,13 +19,19 @@ export type ScannedRoutes = {
   GET: {
     'new_account.create': { paramsTuple?: []; params?: {} }
     'session.create': { paramsTuple?: []; params?: {} }
-    'home': { paramsTuple?: []; params?: {} }
+    'replays': { paramsTuple?: []; params?: {} }
+    'teams': { paramsTuple?: []; params?: {} }
+    'users': { paramsTuple?: []; params?: {} }
+    'profile': { paramsTuple?: []; params?: {} }
     'password_changes.show': { paramsTuple?: []; params?: {} }
   }
   HEAD: {
     'new_account.create': { paramsTuple?: []; params?: {} }
     'session.create': { paramsTuple?: []; params?: {} }
-    'home': { paramsTuple?: []; params?: {} }
+    'replays': { paramsTuple?: []; params?: {} }
+    'teams': { paramsTuple?: []; params?: {} }
+    'users': { paramsTuple?: []; params?: {} }
+    'profile': { paramsTuple?: []; params?: {} }
     'password_changes.show': { paramsTuple?: []; params?: {} }
   }
   POST: {

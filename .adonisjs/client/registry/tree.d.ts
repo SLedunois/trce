@@ -11,7 +11,10 @@ export interface ApiDefinition {
     store: typeof routes['session.store']
     destroy: typeof routes['session.destroy']
   }
-  home: typeof routes['home']
+  replays: typeof routes['replays']
+  teams: typeof routes['teams']
+  users: typeof routes['users']
+  profile: typeof routes['profile']
   passwordChanges: {
     show: typeof routes['password_changes.show']
     update: typeof routes['password_changes.update']

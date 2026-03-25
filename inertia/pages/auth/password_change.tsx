@@ -1,5 +1,5 @@
 import { PasswordChangeForm } from '~/components/password-change-form'
-import AuthLayout from './auth_layout'
+import AuthLayout from '@/layouts/auth_layout'
 
 export default function PasswordChange() {
   return (

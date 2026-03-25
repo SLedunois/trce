@@ -55,9 +55,45 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/session_controller').default['store']>>>
     }
   }
-  'home': {
+  'replays': {
     methods: ["GET","HEAD"]
-    pattern: '/'
+    pattern: '/replays'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: unknown
+      errorResponse: unknown
+    }
+  }
+  'teams': {
+    methods: ["GET","HEAD"]
+    pattern: '/teams'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: unknown
+      errorResponse: unknown
+    }
+  }
+  'users': {
+    methods: ["GET","HEAD"]
+    pattern: '/users'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: unknown
+      errorResponse: unknown
+    }
+  }
+  'profile': {
+    methods: ["GET","HEAD"]
+    pattern: '/profile'
     types: {
       body: {}
       paramsTuple: []

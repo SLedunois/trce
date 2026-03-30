@@ -76,6 +76,8 @@ export default class GenerateAdmin extends BaseCommand {
       await db.table('users').insert({
         email: this.email,
         full_name: `${this.firstname} ${this.lastname}`,
+        first_name: this.firstname,
+        last_name: this.lastname,
         password: hashedPassword,
         created_at: 'now()',
       })

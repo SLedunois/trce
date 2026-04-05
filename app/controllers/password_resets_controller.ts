@@ -3,7 +3,6 @@ import { DateTime } from 'luxon'
 import type { HttpContext } from '@adonisjs/core/http'
 import string from '@adonisjs/core/helpers/string'
 import mail from '@adonisjs/mail/services/main'
-import hash from '@adonisjs/core/services/hash'
 
 import User from '#models/user'
 import { forgotValidator, resetValidator } from '#validators/password'

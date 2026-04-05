@@ -13,11 +13,23 @@ import router from '@adonisjs/core/services/router'
 
 router
   .group(() => {
-    router.get('signup', [controllers.NewAccount, 'create'])
-    router.post('signup', [controllers.NewAccount, 'store'])
+    router.get('login', [controllers.Session, 'show']).as('login.show')
+    router.post('login', [controllers.Session, 'auth']).as('login.auth')
 
-    router.get('login', [controllers.Session, 'create'])
-    router.post('login', [controllers.Session, 'store'])
+    router
+      .get('forgot-password', [controllers.PasswordResets, 'showForgotPassword'])
+      .as('password.forgot.show')
+    router
+      .post('forgot-password', [controllers.PasswordResets, 'processForgotPassword'])
+      .as('password.forgot.store')
+
+    router
+      .get('reset-password/:token', [controllers.PasswordResets, 'showResetPassword'])
+      .as('password.reset.show')
+
+    router
+      .post('reset-password', [controllers.PasswordResets, 'resetPassword'])
+      .as('password.reset')
   })
   .use(middleware.guest())
 
@@ -32,10 +44,9 @@ router
   })
   .use([middleware.auth(), middleware.forcePasswordChange()])
 
-// ✅ Route de changement de mot de passe : auth seulement (pas de boucle infinie !)
 router
   .group(() => {
-    router.get('/password/change', [controllers.PasswordChanges, 'show'])
-    router.post('/password/change', [controllers.PasswordChanges, 'update'])
+    router.get('password/change', [controllers.PasswordChanges, 'show'])
+    router.post('password/change', [controllers.PasswordChanges, 'update'])
   })
-  .use(middleware.auth()) // pas de forcePasswordChange ici
+  .use(middleware.auth())

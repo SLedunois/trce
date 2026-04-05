@@ -2,11 +2,11 @@ import User from '#models/user'
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class SessionController {
-  async create({ inertia }: HttpContext) {
+  async show({ inertia }: HttpContext) {
     return inertia.render('auth/login', {})
   }
 
-  async store({ request, auth, response }: HttpContext) {
+  async auth({ request, auth, response }: HttpContext) {
     const { email, password } = request.all()
     const user = await User.verifyCredentials(email, password)
 
@@ -16,6 +16,6 @@ export default class SessionController {
 
   async destroy({ auth, response }: HttpContext) {
     await auth.use('web').logout()
-    response.redirect().toRoute('session.create')
+    response.redirect().toRoute('login.show')
   }
 }

@@ -25,6 +25,7 @@ services:
     container_name: trce_mailpit
     restart: unless-stopped
     ports:
+      - 1025:1025
       - 8025:8025
     environment:
       MP_MAX_MESSAGES: 5000

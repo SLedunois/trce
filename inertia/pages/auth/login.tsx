@@ -1,10 +1,11 @@
 import AuthLayout from '@/layouts/auth_layout'
 import { LoginForm } from '@/components/login-form'
+import { InertiaProps } from '~/types'
 
-export default function Login() {
+export default function Login(props: InertiaProps) {
   return (
     <AuthLayout>
-      <LoginForm />
+      <LoginForm flash={props.flash} />
     </AuthLayout>
   )
 }

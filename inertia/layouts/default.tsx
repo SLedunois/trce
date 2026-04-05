@@ -7,7 +7,7 @@ import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar'
 import { AppSidebar } from '@/components/app-sidebar'
 import { AppHeader } from '~/components/app-header'
 
-const unheaderedPages: string[] = ['/login', '/password/change']
+const unheaderedPages: string[] = ['auth/login', 'auth/password_change', 'auth/forgot_password']
 
 export default function Layout({ children }: { children: ReactElement<Data.SharedProps> }) {
   useEffect(() => {
@@ -24,19 +24,18 @@ export default function Layout({ children }: { children: ReactElement<Data.Share
 
   return (
     <>
-      {!unheaderedPages.includes(usePage().url) ? (
+      {!unheaderedPages.includes(usePage().component) ? (
         <SidebarProvider>
           <AppSidebar user={children.props.user} />
           <SidebarInset>
             <AppHeader />
             <main>{children}</main>
           </SidebarInset>
+          <Toaster position="top-center" richColors />
         </SidebarProvider>
       ) : (
         <main>{children}</main>
       )}
-
-      <Toaster position="top-center" richColors />
     </>
   )
 }

@@ -1,12 +1,6 @@
 import type { HttpContext } from '@adonisjs/core/http'
-import vine from '@vinejs/vine'
 
-const changePasswordValidator = vine.compile(
-  vine.object({
-    password: vine.string().minLength(8),
-    password_confirmation: vine.string().confirmed({ as: 'password_confirmation' }),
-  })
-)
+import { changePasswordValidator } from '#validators/password'
 
 export default class PasswordChangesController {
   async show({ inertia }: HttpContext) {

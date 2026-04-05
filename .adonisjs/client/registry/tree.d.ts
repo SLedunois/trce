@@ -2,19 +2,26 @@
 import type { routes } from './index.ts'
 
 export interface ApiDefinition {
-  newAccount: {
-    create: typeof routes['new_account.create']
-    store: typeof routes['new_account.store']
+  login: {
+    show: typeof routes['login.show']
+    auth: typeof routes['login.auth']
   }
-  session: {
-    create: typeof routes['session.create']
-    store: typeof routes['session.store']
-    destroy: typeof routes['session.destroy']
+  password: {
+    forgot: {
+      show: typeof routes['password.forgot.show']
+      store: typeof routes['password.forgot.store']
+    }
+    reset: typeof routes['password.reset'] & {
+      show: typeof routes['password.reset.show']
+    }
   }
   replays: typeof routes['replays']
   teams: typeof routes['teams']
   users: typeof routes['users']
   profile: typeof routes['profile']
+  session: {
+    destroy: typeof routes['session.destroy']
+  }
   passwordChanges: {
     show: typeof routes['password_changes.show']
     update: typeof routes['password_changes.update']

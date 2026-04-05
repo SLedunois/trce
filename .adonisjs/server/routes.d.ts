@@ -4,10 +4,12 @@ type ParamValue = string | number | bigint | boolean
 
 export type ScannedRoutes = {
   ALL: {
-    'new_account.create': { paramsTuple?: []; params?: {} }
-    'new_account.store': { paramsTuple?: []; params?: {} }
-    'session.create': { paramsTuple?: []; params?: {} }
-    'session.store': { paramsTuple?: []; params?: {} }
+    'login.show': { paramsTuple?: []; params?: {} }
+    'login.auth': { paramsTuple?: []; params?: {} }
+    'password.forgot.show': { paramsTuple?: []; params?: {} }
+    'password.forgot.store': { paramsTuple?: []; params?: {} }
+    'password.reset.show': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
+    'password.reset': { paramsTuple?: []; params?: {} }
     'replays': { paramsTuple?: []; params?: {} }
     'teams': { paramsTuple?: []; params?: {} }
     'users': { paramsTuple?: []; params?: {} }
@@ -17,8 +19,9 @@ export type ScannedRoutes = {
     'password_changes.update': { paramsTuple?: []; params?: {} }
   }
   GET: {
-    'new_account.create': { paramsTuple?: []; params?: {} }
-    'session.create': { paramsTuple?: []; params?: {} }
+    'login.show': { paramsTuple?: []; params?: {} }
+    'password.forgot.show': { paramsTuple?: []; params?: {} }
+    'password.reset.show': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
     'replays': { paramsTuple?: []; params?: {} }
     'teams': { paramsTuple?: []; params?: {} }
     'users': { paramsTuple?: []; params?: {} }
@@ -26,8 +29,9 @@ export type ScannedRoutes = {
     'password_changes.show': { paramsTuple?: []; params?: {} }
   }
   HEAD: {
-    'new_account.create': { paramsTuple?: []; params?: {} }
-    'session.create': { paramsTuple?: []; params?: {} }
+    'login.show': { paramsTuple?: []; params?: {} }
+    'password.forgot.show': { paramsTuple?: []; params?: {} }
+    'password.reset.show': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
     'replays': { paramsTuple?: []; params?: {} }
     'teams': { paramsTuple?: []; params?: {} }
     'users': { paramsTuple?: []; params?: {} }
@@ -35,8 +39,9 @@ export type ScannedRoutes = {
     'password_changes.show': { paramsTuple?: []; params?: {} }
   }
   POST: {
-    'new_account.store': { paramsTuple?: []; params?: {} }
-    'session.store': { paramsTuple?: []; params?: {} }
+    'login.auth': { paramsTuple?: []; params?: {} }
+    'password.forgot.store': { paramsTuple?: []; params?: {} }
+    'password.reset': { paramsTuple?: []; params?: {} }
     'session.destroy': { paramsTuple?: []; params?: {} }
     'password_changes.update': { paramsTuple?: []; params?: {} }
   }

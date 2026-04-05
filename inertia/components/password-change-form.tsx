@@ -7,19 +7,17 @@ import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field'
-import { Alert, AlertDescription } from '@/components/ui/alert'
 import { PasswordInput } from '@/components/ui/password-input'
+import { Message } from './ui/messages'
 
-const ChangePasswordAlert = () => (
-  <Alert className="max-w-md border-teal-200 bg-teal-50 text-teal-900 dark:border-teal-900 dark:bg-teal-950 dark:text-teal-50 mb-4">
-    <Shield />
-    <AlertDescription>
-      For security reasons, you must set a new password before continuing.
-    </AlertDescription>
-  </Alert>
-)
+export type PasswordChangeFormProps = {
+  token?: string
+}
 
-export function PasswordChangeForm({ className, ...props }: React.ComponentProps<'div'>) {
+export function PasswordChangeForm({
+  className,
+  ...props
+}: React.ComponentProps<'div'> & PasswordChangeFormProps) {
   const [password, setPassword] = useState('')
   const [passwordConfirmation, setPasswordConfirmation] = useState('')
   const [validForm, setValidForm] = useState(true)
@@ -42,12 +40,16 @@ export function PasswordChangeForm({ className, ...props }: React.ComponentProps
     <div className={cn('flex flex-col gap-6', className)} {...props}>
       <Card>
         <CardHeader className="text-center">
-          <ChangePasswordAlert />
+          <Message
+            type="success"
+            icon={Shield}
+            description="For security reasons, you must set a new password before continuing."
+          />
           <CardTitle className="text-xl">Password Update</CardTitle>
           <CardDescription>Choose a strong password for your account.</CardDescription>
         </CardHeader>
         <CardContent>
-          <Form route="password_changes.update">
+          <Form route={props.token ? 'password.reset' : 'password_changes.update'}>
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="email">New password</FieldLabel>
@@ -57,6 +59,7 @@ export function PasswordChangeForm({ className, ...props }: React.ComponentProps
                   name="password"
                 />
               </Field>
+              {props.token && <input type="hidden" name="token" value={props.token} />}
               <Field>
                 <FieldLabel htmlFor="password">Confirm password</FieldLabel>
                 <PasswordInput

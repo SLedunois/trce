@@ -22,4 +22,9 @@ export default class User extends compose(UserSchema, withAuthFinder(hash)) {
   mustChangePassword(): boolean {
     return this.temporaryPassword
   }
+
+  static ROLES = {
+    USER: 'user',
+    ADMIN: 'admin',
+  }
 }

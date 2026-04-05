@@ -10,6 +10,8 @@ export default class extends BaseSchema {
       table.string('first_name').notNullable()
       table.string('last_name').notNullable()
 
+      table.enum('role', ['admin', 'user']).defaultTo('user').notNullable()
+
       table.string('email', 254).notNullable().unique()
       table.string('password').notNullable()
       table.boolean('temporary_password').notNullable().defaultTo(true)

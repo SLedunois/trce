@@ -23,7 +23,7 @@ export class PasswordResetTokenSchema extends BaseModel {
 }
 
 export class UserSchema extends BaseModel {
-  static $columns = ['createdAt', 'email', 'firstName', 'fullName', 'id', 'lastName', 'password', 'temporaryPassword', 'updatedAt'] as const
+  static $columns = ['createdAt', 'email', 'firstName', 'fullName', 'id', 'lastName', 'password', 'role', 'temporaryPassword', 'updatedAt'] as const
   $columns = UserSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
@@ -39,6 +39,8 @@ export class UserSchema extends BaseModel {
   declare lastName: string
   @column({ serializeAs: null })
   declare password: string
+  @column()
+  declare role: string
   @column()
   declare temporaryPassword: boolean
   @column.dateTime({ autoCreate: true, autoUpdate: true })

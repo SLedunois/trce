@@ -5,6 +5,8 @@ import type { CommandOptions } from '@adonisjs/core/types/ace'
 import hash from '@adonisjs/core/services/hash'
 import db from '@adonisjs/lucid/services/db'
 
+import User from '#models/user'
+
 export default class GenerateAdmin extends BaseCommand {
   static commandName = 'generate:admin'
   static description = 'Generate an administrator user with a temporary password'
@@ -76,6 +78,7 @@ export default class GenerateAdmin extends BaseCommand {
       await db.table('users').insert({
         email: this.email,
         full_name: `${this.firstname} ${this.lastname}`,
+        role: User.ROLES.ADMIN,
         first_name: this.firstname,
         last_name: this.lastname,
         password: hashedPassword,

@@ -130,7 +130,7 @@ const UserMenu = ({ user }: SideNavProp) => {
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <Link as={DropdownMenuItem} route="profile">
+              <Link as={DropdownMenuItem} route="profile.show">
                 <UserRoundPen />
                 Profile
               </Link>

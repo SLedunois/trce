@@ -80,14 +80,16 @@ export default function Teams({ teams, user }: TeamsPageProps) {
           <UsersRound />
         </EmptyMedia>
         <EmptyTitle>No team found</EmptyTitle>
-        <EmptyDescription>
-          Your replays are waiting. Create a team, invite your teammates and start collecting them
-          in one place.
-        </EmptyDescription>
+        {isAdmin(user) ? (
+          <EmptyDescription>
+            Your replays are waiting. Create a team, invite your teammates and start collecting them
+            in one place.
+          </EmptyDescription>
+        ) : (
+          <EmptyDescription>You are not currently on any team</EmptyDescription>
+        )}
       </EmptyHeader>
-      <EmptyContent>
-        <AddATeamButton />
-      </EmptyContent>
+      <EmptyContent>{isAdmin(user) && <AddATeamButton />}</EmptyContent>
     </Empty>
   )
 

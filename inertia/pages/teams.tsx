@@ -24,7 +24,7 @@ import { Input } from '~/components/ui/input'
 import { InertiaProps } from '~/types'
 import { isAdmin } from '~/lib/utils'
 
-import Team from '#models/team'
+import type Team from '#models/team'
 import { Item, ItemContent, ItemDescription, ItemMedia, ItemTitle } from '~/components/ui/item'
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
 

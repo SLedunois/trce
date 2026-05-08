@@ -92,7 +92,7 @@ export default class GenerateAdmin extends BaseCommand {
     }
 
     this.ui
-      .instructions()
+      .sticker()
       .heading(`${this.ui.icons.tick}  Administrator successfully created`)
       .add(`Email: ${this.email}`)
       .add(`Password: ${password}`)

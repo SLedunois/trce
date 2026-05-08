@@ -35,11 +35,15 @@ router
 
 router
   .group(() => {
-    router.on('').redirect('replays')
-    router.on('replays').renderInertia('replays', {}).as('replays')
-    router.on('teams').renderInertia('teams', {}).as('teams')
-    router.on('users').renderInertia('users', {}).as('users')
-    router.on('profile').renderInertia('profile', {}).as('profile')
+    router.on('').redirect('replays.show')
+    router.on('replays').renderInertia('replays', {}).as('replays.show')
+    router.get('teams', [controllers.Teams, 'list']).as('teams.list')
+    router.get('teams/:id', [controllers.Teams, 'show']).as('teams.show')
+    router.post('teams', [controllers.Teams, 'create']).as('teams.create')
+    router.put('teams', [controllers.Teams, 'update']).as('teams.update')
+    router.delete('teams', [controllers.Teams, 'delete']).as('teams.delete')
+    router.on('users').renderInertia('users', {}).as('users.show')
+    router.on('profile').renderInertia('profile', {}).as('profile.show')
     router.post('logout', [controllers.Session, 'destroy'])
   })
   .use([middleware.auth(), middleware.forcePasswordChange()])

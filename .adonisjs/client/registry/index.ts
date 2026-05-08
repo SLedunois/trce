@@ -42,29 +42,53 @@ const routes = {
     tokens: [{"old":"/reset-password","type":0,"val":"reset-password","end":""}],
     types: placeholder as Registry['password.reset']['types'],
   },
-  'replays': {
+  'replays.show': {
     methods: ["GET","HEAD"],
     pattern: '/replays',
     tokens: [{"old":"/replays","type":0,"val":"replays","end":""}],
-    types: placeholder as Registry['replays']['types'],
+    types: placeholder as Registry['replays.show']['types'],
   },
-  'teams': {
+  'teams.list': {
     methods: ["GET","HEAD"],
     pattern: '/teams',
     tokens: [{"old":"/teams","type":0,"val":"teams","end":""}],
-    types: placeholder as Registry['teams']['types'],
+    types: placeholder as Registry['teams.list']['types'],
   },
-  'users': {
+  'teams.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/teams/:id',
+    tokens: [{"old":"/teams/:id","type":0,"val":"teams","end":""},{"old":"/teams/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['teams.show']['types'],
+  },
+  'teams.create': {
+    methods: ["POST"],
+    pattern: '/teams',
+    tokens: [{"old":"/teams","type":0,"val":"teams","end":""}],
+    types: placeholder as Registry['teams.create']['types'],
+  },
+  'teams.update': {
+    methods: ["PUT"],
+    pattern: '/teams',
+    tokens: [{"old":"/teams","type":0,"val":"teams","end":""}],
+    types: placeholder as Registry['teams.update']['types'],
+  },
+  'teams.delete': {
+    methods: ["DELETE"],
+    pattern: '/teams',
+    tokens: [{"old":"/teams","type":0,"val":"teams","end":""}],
+    types: placeholder as Registry['teams.delete']['types'],
+  },
+  'users.show': {
     methods: ["GET","HEAD"],
     pattern: '/users',
     tokens: [{"old":"/users","type":0,"val":"users","end":""}],
-    types: placeholder as Registry['users']['types'],
+    types: placeholder as Registry['users.show']['types'],
   },
-  'profile': {
+  'profile.show': {
     methods: ["GET","HEAD"],
     pattern: '/profile',
     tokens: [{"old":"/profile","type":0,"val":"profile","end":""}],
-    types: placeholder as Registry['profile']['types'],
+    types: placeholder as Registry['profile.show']['types'],
   },
   'session.destroy': {
     methods: ["POST"],

@@ -29,7 +29,9 @@ export default function Layout({ children }: { children: ReactElement<Data.Share
           <AppSidebar user={children.props.user} />
           <SidebarInset>
             <AppHeader />
-            <main>{children}</main>
+            <main className="content-center">
+              <div className="flex items-center justify-center">{children}</div>
+            </main>
           </SidebarInset>
           <Toaster position="top-center" richColors />
         </SidebarProvider>

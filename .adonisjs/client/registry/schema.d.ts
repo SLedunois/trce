@@ -79,7 +79,7 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/password_resets_controller').default['resetPassword']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
-  'replays': {
+  'replays.show': {
     methods: ["GET","HEAD"]
     pattern: '/replays'
     types: {
@@ -91,7 +91,7 @@ export interface Registry {
       errorResponse: unknown
     }
   }
-  'teams': {
+  'teams.list': {
     methods: ["GET","HEAD"]
     pattern: '/teams'
     types: {
@@ -99,11 +99,59 @@ export interface Registry {
       paramsTuple: []
       params: {}
       query: {}
-      response: unknown
-      errorResponse: unknown
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/teams_controller').default['list']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/teams_controller').default['list']>>>
     }
   }
-  'users': {
+  'teams.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/teams/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/teams_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/teams_controller').default['show']>>>
+    }
+  }
+  'teams.create': {
+    methods: ["POST"]
+    pattern: '/teams'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/team').createTeamValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/team').createTeamValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/teams_controller').default['create']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/teams_controller').default['create']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'teams.update': {
+    methods: ["PUT"]
+    pattern: '/teams'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/teams_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/teams_controller').default['update']>>>
+    }
+  }
+  'teams.delete': {
+    methods: ["DELETE"]
+    pattern: '/teams'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/teams_controller').default['delete']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/teams_controller').default['delete']>>>
+    }
+  }
+  'users.show': {
     methods: ["GET","HEAD"]
     pattern: '/users'
     types: {
@@ -115,7 +163,7 @@ export interface Registry {
       errorResponse: unknown
     }
   }
-  'profile': {
+  'profile.show': {
     methods: ["GET","HEAD"]
     pattern: '/profile'
     types: {

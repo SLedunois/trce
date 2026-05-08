@@ -7,4 +7,5 @@ export const controllers = {
   PasswordChanges: () => import('#controllers/password_changes_controller'),
   PasswordResets: () => import('#controllers/password_resets_controller'),
   Session: () => import('#controllers/session_controller'),
+  Teams: () => import('#controllers/teams_controller'),
 }

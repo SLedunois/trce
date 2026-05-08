@@ -15,10 +15,22 @@ export interface ApiDefinition {
       show: typeof routes['password.reset.show']
     }
   }
-  replays: typeof routes['replays']
-  teams: typeof routes['teams']
-  users: typeof routes['users']
-  profile: typeof routes['profile']
+  replays: {
+    show: typeof routes['replays.show']
+  }
+  teams: {
+    list: typeof routes['teams.list']
+    show: typeof routes['teams.show']
+    create: typeof routes['teams.create']
+    update: typeof routes['teams.update']
+    delete: typeof routes['teams.delete']
+  }
+  users: {
+    show: typeof routes['users.show']
+  }
+  profile: {
+    show: typeof routes['profile.show']
+  }
   session: {
     destroy: typeof routes['session.destroy']
   }

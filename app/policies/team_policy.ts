@@ -1,5 +1,5 @@
-import User from '#models/user'
-import Team from '#models/team'
+import type User from '#models/user'
+// import Team from '#models/team'
 import { BasePolicy } from '@adonisjs/bouncer'
 import type { AuthorizerResponse } from '@adonisjs/bouncer/types'
 

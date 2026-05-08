@@ -17,7 +17,7 @@ export default class TeamsController {
     return inertia.render('teams', { teams })
   }
 
-  async show(ctx: HttpContext) {}
+  async show(_: HttpContext) {}
 
   async create({ request, response }: HttpContext) {
     const { teamName } = await request.validateUsing(createTeamValidator)
@@ -30,7 +30,7 @@ export default class TeamsController {
     return response.redirect().toRoute('teams.list')
   }
 
-  async update(ctx: HttpContext) {}
+  async update(_: HttpContext) {}
 
-  async delete(ctx: HttpContext) {}
+  async delete(_: HttpContext) {}
 }

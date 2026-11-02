@@ -7,6 +7,8 @@
 - Docker Compose pour lancer les dépendances locales.
 - Git.
 
+Le dépôt cible AdonisJS **7.6.0**. Après changement de version, consulter le [guide de mise à niveau](upgrade-adonisjs-7.6.0.md) avant de lancer `npm ci` si le lockfile n’a pas encore été régénéré.
+
 ## 2. Démarrage local
 
 ### 2.1 Récupérer et configurer le projet

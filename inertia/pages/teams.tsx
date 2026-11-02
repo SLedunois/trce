@@ -25,8 +25,8 @@ import { InertiaProps } from '~/types'
 import { isAdmin } from '~/lib/utils'
 
 import type Team from '#models/team'
-import { Item, ItemContent, ItemDescription, ItemMedia, ItemTitle } from '~/components/ui/item'
-import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
+import { Item, ItemContent, ItemTitle } from '~/components/ui/item'
+// import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
 
 type TeamsPageProps = InertiaProps & {
   teams: Team[]

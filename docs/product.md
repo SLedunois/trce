@@ -1,135 +1,135 @@
-# TRCE — Présentation produit
+# TRCE — Product Overview
 
-> Statut : **proposition de cadrage**, à confirmer avec les utilisateurs et les cas d'usage réels.
+> Status: **Proposed product definition**, to be validated with users and real-world use cases.
 
-## 1. Positionnement
+## 1. Product Positioning
 
-L'interface actuelle présente TRCE comme un espace où une équipe peut centraliser ses « replays » et où une clé API permet d'alimenter cet espace. Le dépôt ne contient pas encore de définition détaillée de ce que recouvre un replay.
+The current interface presents TRCE as a space where a team can centralize its "replays" and use an API key to populate that space. The repository does not yet contain a detailed definition of what constitutes a replay.
 
-Pour structurer la suite, ce document retient l'hypothèse suivante :
+To provide a foundation for future development, this document adopts the following assumption:
 
-**TRCE est une plateforme permettant à des équipes de capturer, centraliser, consulter et rejouer des échanges HTTP/API**, notamment pour reproduire un comportement, diagnostiquer une anomalie, comparer des réponses ou partager un scénario entre développeurs.
+**TRCE is a platform that enables teams to capture, centralize, inspect, and replay HTTP/API exchanges**, primarily to reproduce behavior, diagnose issues, compare responses, or share scenarios between developers.
 
-Cette définition est une hypothèse de conception. Elle doit être validée avant de figer le modèle de données, le format d'ingestion et le comportement exact du rejeu.
+This definition is a design assumption. It must be validated before finalizing the data model, ingestion format, and exact replay execution behavior.
 
-## 2. Problème adressé
+## 2. Problem Statement
 
-Dans une équipe de développement, reproduire un incident ou un comportement d'API peut nécessiter de retrouver les paramètres d'une requête, ses en-têtes, son corps, la réponse obtenue et le contexte d'exécution. Ces éléments sont souvent répartis entre logs, outils de développement, tickets et environnements.
+Within a development team, reproducing an incident or API behavior may require recovering request parameters, headers, body, response, and execution context. This information is often scattered across logs, development tools, tickets, and environments.
 
-TRCE pourrait apporter :
+TRCE could provide:
 
-- un espace partagé et organisé par équipe ;
-- une ingestion automatisable depuis les applications ou outils ;
-- une conservation structurée des échanges ;
-- une recherche et une consultation centralisées ;
-- un rejeu contrôlé, si ce comportement est confirmé dans le besoin.
+- A shared workspace organized by team.
+- Automated ingestion from applications or tools.
+- Structured storage of HTTP exchanges.
+- Centralized search and inspection.
+- Controlled replay execution, if this requirement is confirmed.
 
-## 3. Utilisateurs et rôles
+## 3. Users and Roles
 
-### Administrateur de la plateforme
+### Platform Administrator
 
-Gère les comptes, les équipes et les paramètres globaux. Le rôle `admin` existe dans le modèle `users` actuel.
+Manages user accounts, teams, and global platform settings. The `admin` role already exists in the current `users` model.
 
-### Membre d'une équipe
+### Team Member
 
-Accède aux données de son équipe selon ses permissions. La table de jointure `users_teams` existe déjà, mais les relations et les règles d'accès ne sont pas encore implémentées.
+Accesses their team's data according to their permissions. The `users_teams` pivot table already exists, but the relationships and access control rules have not yet been implemented.
 
-### Client d'ingestion
+### Ingestion Client
 
-Application, SDK ou service qui transmet des données à TRCE au moyen d'une clé API. Ce client est une identité technique, distincte d'un utilisateur humain.
+An application, SDK, or service that sends data to TRCE using an API key. This client represents a technical identity, separate from a human user.
 
-### Administrateur d'équipe — cible proposée
+### Team Administrator — Proposed Target Role
 
-Gère les membres, les clés API, les politiques de conservation et les paramètres propres à son équipe. Ce rôle n'existe pas encore dans le modèle actuel.
+Manages team members, API keys, retention policies, and team-specific settings. This role does not yet exist in the current data model.
 
-## 4. Périmètre fonctionnel proposé
+## 4. Proposed Functional Scope
 
-| Domaine | Fonctionnalité cible | État dans le dépôt |
+| Domain | Target functionality | Current repository status |
 |---|---|---|
-| Identité | Connexion et déconnexion par session | Présent, corrections à prévoir |
-| Identité | Mot de passe oublié / réinitialisation | Présent, durcissement à prévoir |
-| Identité | Changement forcé du mot de passe temporaire | Présent |
-| Utilisateurs | Consultation et administration | Page placeholder |
-| Équipes | Liste des équipes | Partiellement présent |
-| Équipes | Création | Présente, autorisation à sécuriser |
-| Équipes | Modification, suppression, membres | Non implémentées |
-| API Keys | Création, consultation, révocation, rotation | Non implémentées |
-| Replays | Ingestion, stockage, recherche, détail | Non implémentés |
-| Replays | Rejeu vers une cible contrôlée | Non implémenté ; besoin à confirmer |
-| Exploitation | Audit, métriques, rétention et purge | Non implémentés |
+| Identity | Session-based login and logout | Implemented, corrections needed |
+| Identity | Forgotten password / password reset | Implemented, security hardening needed |
+| Identity | Forced temporary password change | Implemented |
+| Users | User listing and administration | Placeholder page |
+| Teams | Team listing | Partially implemented |
+| Teams | Team creation | Implemented, authorization needs to be secured |
+| Teams | Editing, deletion, and membership management | Not implemented |
+| API Keys | Creation, listing, revocation, and rotation | Not implemented |
+| Replays | Ingestion, storage, search, and details | Not implemented |
+| Replays | Replay execution against a controlled target | Not implemented; requirement to be confirmed |
+| Operations | Auditing, metrics, retention, and cleanup | Not implemented |
 
-## 5. Parcours utilisateur cible
+## 5. Target User Journeys
 
-### 5.1 Créer un espace de travail
+### 5.1 Create a Workspace
 
-1. Un administrateur crée une équipe.
-2. Il renseigne son nom et invite ou associe des membres.
-3. Les membres accèdent uniquement aux données de leur équipe.
+1. An administrator creates a team.
+2. They provide a name and invite or associate members with the team.
+3. Members can only access data belonging to their team.
 
-### 5.2 Connecter une application
+### 5.2 Connect an Application
 
-1. Un administrateur d'équipe crée une clé API.
-2. TRCE affiche le secret une seule fois.
-3. Le client configure la clé dans son environnement d'exécution.
-4. Le client envoie les événements à l'endpoint d'ingestion.
-5. TRCE authentifie la clé, détermine l'équipe, valide le payload et applique les règles de filtrage.
+1. A team administrator creates an API key.
+2. TRCE displays the secret only once.
+3. The client configures the key in its runtime environment.
+4. The client sends events to the ingestion endpoint.
+5. TRCE authenticates the API key, identifies the associated team, validates the payload, and applies filtering rules.
 
-### 5.3 Consulter un replay
+### 5.3 Inspect a Replay
 
-1. L'utilisateur sélectionne une équipe.
-2. Il filtre les replays par période, méthode HTTP, URL, statut ou identifiant de corrélation.
-3. Il ouvre un replay et consulte les métadonnées et les contenus autorisés.
-4. Il peut exporter ou partager une référence, selon les permissions.
+1. The user selects a team.
+2. They filter replays by date range, HTTP method, URL, status code, or correlation ID.
+3. They open a replay and inspect its metadata and authorized content.
+4. They can export the replay or share a reference to it, depending on their permissions.
 
-### 5.4 Rejouer un échange — à valider
+### 5.4 Replay an HTTP Exchange — To Be Validated
 
-1. L'utilisateur sélectionne un replay.
-2. Il choisit une cible autorisée et les paramètres modifiables.
-3. TRCE exécute le rejeu dans un worker isolé.
-4. TRCE conserve le résultat du rejeu et permet une comparaison avec l'échange original.
+1. The user selects a replay.
+2. They choose an authorized target and the parameters they want to modify.
+3. TRCE executes the replay in an isolated worker.
+4. TRCE stores the replay execution result and allows comparison with the original exchange.
 
-Le rejeu ne doit jamais être une simple fonction qui envoie librement une URL fournie par l'utilisateur : les risques SSRF, d'exfiltration et d'effets de bord doivent être traités au niveau de l'architecture.
+Replay execution must never be implemented as a simple function that freely sends requests to a URL provided by the user. SSRF risks, data exfiltration, and unintended side effects must be addressed at the architecture level.
 
-## 6. Objets métier à prévoir
+## 6. Business Entities to Consider
 
-Les objets ci-dessous sont une proposition et ne sont pas encore implémentés, à l'exception de `User` et `Team`.
+The following entities are proposed and have not yet been implemented, with the exception of `User` and `Team`.
 
-- **User** : identité humaine, adresse e-mail, rôle global.
-- **Team** : espace de travail et frontière de cloisonnement.
-- **TeamMember** : appartenance d'un utilisateur à une équipe et rôle au sein de celle-ci.
-- **ApiKey** : identité technique liée à une équipe, avec hash du secret, scopes, état, expiration et dernière utilisation.
-- **Replay** : métadonnées d'un échange capturé : méthode, URL normalisée, horodatage, statut, durée, taille et identifiants de corrélation.
-- **ReplayPayload** : référence vers les corps et en-têtes conservés, idéalement dans un stockage objet.
-- **ReplayExecution** : tentative de rejeu, cible, statut, durée et résultat.
-- **AuditEvent** : action de sécurité ou d'administration importante.
+- **User**: Human identity, email address, and global role.
+- **Team**: Workspace and data isolation boundary.
+- **TeamMember**: Association between a user and a team, including their role within that team.
+- **ApiKey**: Technical identity associated with a team, including secret hash, scopes, status, expiration, and last usage.
+- **Replay**: Metadata describing a captured exchange: HTTP method, normalized URL, timestamp, status code, duration, size, and correlation identifiers.
+- **ReplayPayload**: Reference to stored request/response bodies and headers, ideally in object storage.
+- **ReplayExecution**: Replay attempt, target, status, duration, and result.
+- **AuditEvent**: Important security or administrative action.
 
-## 7. Principes produit
+## 7. Product Principles
 
-1. **Team-first** : toute donnée métier appartient explicitement à une équipe.
-2. **API-first pour l'ingestion** : le chemin d'alimentation doit être documenté et versionné.
-3. **Privacy by default** : secrets, données personnelles et corps sensibles sont masqués ou exclus par défaut.
-4. **Traceability** : chaque opération importante est corrélable et auditable.
-5. **Safe replay** : les exécutions sont explicites, limitées et isolées.
-6. **Progressive disclosure** : les détails techniques sont accessibles sans surcharger la vue de synthèse.
+1. **Team-first**: Every business data entity must explicitly belong to a team.
+2. **API-first ingestion**: The ingestion interface must be documented and versioned.
+3. **Privacy by default**: Secrets, personal data, and sensitive payloads must be masked or excluded by default.
+4. **Traceability**: Every important operation must be correlatable and auditable.
+5. **Safe replay**: Replay executions must be explicit, restricted, and isolated.
+6. **Progressive disclosure**: Technical details must remain accessible without overwhelming summary views.
 
-## 8. Questions métier à trancher
+## 8. Business Questions to Resolve
 
-Avant de stabiliser les contrats d'API et le schéma de données, préciser :
+Before stabilizing API contracts and the data schema, clarify the following points:
 
-- Un replay représente-t-il un échange HTTP isolé, une session complète, une séquence ou un scénario ?
-- Le système capture-t-il la requête et la réponse, ou seulement l'une des deux ?
-- Le rejeu doit-il être natif dans TRCE ou délégué à un client/agent ?
-- Les payloads binaires sont-ils acceptés ? Quelle taille maximale ?
-- Quel niveau de fidélité est requis pour les headers, cookies, délais et erreurs réseau ?
-- Quelles sont les durées de conservation et les contraintes de résidence des données ?
-- Le produit est-il mono-tenant interne ou multi-tenant pour plusieurs organisations clientes ?
-- Faut-il des utilisateurs invités, des rôles personnalisés ou du SSO à terme ?
+- Does a replay represent a single HTTP exchange, an entire session, a sequence of exchanges, or a scenario?
+- Does the system capture both the request and response, or only one of them?
+- Should replay execution be handled natively by TRCE or delegated to a client/agent?
+- Are binary payloads supported? What is the maximum allowed size?
+- What level of fidelity is required for headers, cookies, delays, and network errors?
+- What are the data retention periods and data residency requirements?
+- Is the product an internal single-tenant platform or a multi-tenant platform serving multiple customer organizations?
+- Will guest users, custom roles, or SSO be required in the future?
 
-## 9. Indicateurs de réussite possibles
+## 9. Potential Success Metrics
 
-- délai moyen pour retrouver un échange ;
-- taux d'ingestion réussie et latence d'ingestion ;
-- volume capturé et volume de stockage ;
-- taux de replays exploitables ;
-- temps moyen de diagnostic d'un incident ;
-- nombre d'équipes et de clients d'ingestion actifs.
+- Average time required to find an exchange.
+- Successful ingestion rate and ingestion latency.
+- Captured data volume and storage consumption.
+- Percentage of replay executions that produce usable results.
+- Average incident diagnosis time.
+- Number of active teams and ingestion clients.

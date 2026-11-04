@@ -1,163 +1,163 @@
-# TRCE — Sécurité et exploitation
+# TRCE — Security and Operations
 
-> Évaluation statique du dépôt fourni. Cette page décrit les contrôles visibles et les travaux nécessaires ; elle ne constitue pas une certification ni un audit dynamique.
+> Static assessment of the provided repository. This document describes the security controls currently visible in the codebase and the work still required. It does not constitute a certification or a dynamic security audit.
 
-## 1. État actuel
+## 1. Current Security Status
 
-| Domaine | Constat dans le code | Évaluation |
+| Area | Findings in the codebase | Assessment |
 |---|---|---|
-| Authentification | Guard web basé sur session AdonisJS | Présent |
-| Hash de mot de passe | Provider de hash AdonisJS, configuration Scrypt | Présent |
-| Cookie de session | HttpOnly, Secure en production, SameSite Lax | Présent |
-| CSRF | Activé pour POST/PUT/PATCH/DELETE | Présent |
-| HSTS | Activé, durée configurée à 180 jours | Présent |
-| X-Frame-Options | Activé avec DENY | Présent |
-| X-Content-Type-Options | Activé | Présent |
-| CSP | Désactivée | À traiter |
-| Autorisations Bouncer | Middleware et TeamPolicy présents | Application incomplète |
-| Rate limiting | Pas de mécanisme identifié dans le dépôt | À ajouter |
-| API Keys | Modèle et validation absents | À concevoir |
-| Audit trail | Pas de journal d'audit métier identifié | À ajouter |
-| Stockage sensible | Tokens de réinitialisation enregistrés en clair | À durcir |
-| Cloisonnement équipe | Jointure SQL présente, logique applicative absente | À implémenter |
-| Sauvegarde / PRA | Non documentés dans le dépôt | À définir |
+| Authentication | AdonisJS web guard based on sessions | Implemented |
+| Password hashing | AdonisJS hashing provider, configured with Scrypt | Implemented |
+| Session cookie | HttpOnly, Secure in production, SameSite Lax | Implemented |
+| CSRF | Enabled for POST/PUT/PATCH/DELETE | Implemented |
+| HSTS | Enabled, configured duration of 180 days | Implemented |
+| X-Frame-Options | Enabled with DENY | Implemented |
+| X-Content-Type-Options | Enabled | Implemented |
+| CSP | Disabled | Needs attention |
+| Bouncer authorization | Middleware and TeamPolicy available | Incomplete enforcement |
+| Rate limiting | No rate-limiting mechanism identified in the repository | To be implemented |
+| API Keys | Model and validation are missing | To be designed |
+| Audit trail | No business audit logging identified | To be implemented |
+| Sensitive storage | Password reset tokens stored in plaintext | Needs hardening |
+| Team isolation | SQL pivot table exists, application-level logic is missing | To be implemented |
+| Backup / Disaster Recovery | Not documented in the repository | To be defined |
 
-## 2. Corrections prioritaires
+## 2. Priority Fixes
 
-### P0 — Avant exposition à des utilisateurs
+### P0 — Before Exposing the Application to Users
 
-1. **Appliquer les autorisations dans les contrôleurs.** `TeamPolicy` existe, mais `TeamsController.create()` n'effectue pas de contrôle Bouncer visible. La création d'équipe ne doit pas reposer sur le seul masquage du bouton dans React.
-2. **Corriger le parcours de déconnexion.** La route est `POST /logout` ; vérifier que l'action frontend envoie bien un POST et non une navigation GET.
-3. **Corriger les validations de confirmation de mot de passe.** Vérifier explicitement l'égalité entre mot de passe et confirmation au serveur.
-4. **Vérifier les URL signées de reset.** Une URL est générée avec le helper de signature, mais le contrôleur de lecture du lien doit aussi valider la signature, en plus de contrôler le token en base.
-5. **Ajouter du rate limiting** sur login, demande de reset et endpoints futurs d'ingestion.
-6. **Activer une CSP progressivement.** Commencer par Report-Only, collecter les violations, puis passer en mode bloquant après validation des sources nécessaires à Vite/React.
-7. **Traiter les erreurs non prévues de `generate:admin`.** La commande ne doit pas afficher un succès si l'insertion échoue pour une autre raison qu'un e-mail déjà utilisé.
+1. **Enforce authorization in controllers.** `TeamPolicy` exists, but `TeamsController.create()` does not visibly perform a Bouncer authorization check. Team creation must not rely solely on hiding the button in React.
+2. **Fix the logout flow.** The route is `POST /logout`; verify that the frontend action sends a POST request rather than performing a GET navigation.
+3. **Fix password confirmation validation.** Explicitly verify on the server that the password and confirmation values match.
+4. **Verify signed password reset URLs.** A URL is generated using the signing helper, but the controller handling the link must also validate its signature, in addition to checking the token in the database.
+5. **Add rate limiting** to login, password reset requests, and future ingestion endpoints.
+6. **Enable CSP progressively.** Start with Report-Only mode, collect violations, and then switch to enforcement mode once the sources required by Vite/React have been validated.
+7. **Handle unexpected errors in `generate:admin`.** The command must not report success if the database insertion fails for any reason other than an email address already being in use.
 
-### P1 — Avant ouverture de l'API
+### P1 — Before Opening the API
 
-- API keys générées avec un CSPRNG, stockées sous forme de hash, révocables et à scopes.
-- Authentification distincte des sessions navigateur.
-- Validation stricte des payloads, limites de taille et limites de débit.
-- Autorisation systématique sur `team_id`.
-- Protection contre l'injection de données dans logs et en-têtes.
-- Masquage des cookies, tokens, mots de passe et données personnelles.
-- Pagination et limites de requêtes pour éviter l'épuisement des ressources.
-- Format d'erreurs stable qui n'expose ni stack trace ni secret.
+- API keys generated using a CSPRNG, stored as hashes, revocable, and scope-based.
+- Authentication mechanisms separate from browser sessions.
+- Strict payload validation, payload size limits, and rate limits.
+- Consistent authorization checks based on `team_id`.
+- Protection against data injection into logs and HTTP headers.
+- Redaction of cookies, tokens, passwords, and personal data.
+- Pagination and request limits to prevent resource exhaustion.
+- A stable error format that does not expose stack traces or secrets.
 
-### P2 — Avant passage à l'échelle
+### P2 — Before Scaling
 
-- Audit trail administratif et sécurité.
-- Rotation de secrets et politique de durée de vie des clés.
-- Sauvegardes chiffrées, restauration testée et objectifs RPO/RTO.
-- Supervision base, stockage objet, files et workers.
-- Gestion de rétention et suppression effective des payloads.
-- Tests de charge et tests de cloisonnement multi-tenant.
+- Administrative and security audit trail.
+- Secret rotation and key lifetime policies.
+- Encrypted backups, tested restoration procedures, and defined RPO/RTO objectives.
+- Monitoring of the database, object storage, queues, and workers.
+- Data retention management and effective payload deletion.
+- Load testing and multi-tenant isolation testing.
 
-## 3. Contrôles de sécurité détaillés
+## 3. Detailed Security Controls
 
-### 3.1 Identité et sessions
+### 3.1 Identity and Sessions
 
-- Garder les cookies `HttpOnly`, `Secure` en production et `SameSite` adapté.
-- Utiliser HTTPS partout ; le reverse proxy doit transmettre correctement le contexte sécurisé à l'application.
-- Limiter les sessions inactives et invalider les sessions après changement de mot de passe lorsque le niveau de risque le justifie.
-- Ajouter une limitation des tentatives de connexion par compte et par IP, sans permettre un déni de service ciblé contre un utilisateur.
-- Éviter de révéler si une adresse e-mail existe dans le parcours « mot de passe oublié » ; le message générique actuel va dans le bon sens.
-- Stocker les tokens de reset sous forme de hash, limiter leur durée, leur usage unique et leur invalidation.
+- Keep cookies `HttpOnly`, `Secure` in production, and configured with an appropriate `SameSite` policy.
+- Enforce HTTPS everywhere; the reverse proxy must correctly forward the secure connection context to the application.
+- Limit inactive sessions and invalidate sessions after password changes whenever the risk level justifies it.
+- Add login attempt throttling per account and per IP address, without allowing targeted denial-of-service attacks against individual users.
+- Avoid revealing whether an email address exists during the password reset process; the current generic message follows this principle.
+- Store password reset tokens as hashes, enforce short expiration periods, single-use semantics, and invalidation.
 
-### 3.2 Autorisations multi-équipe
+### 3.2 Multi-Team Authorization
 
-- Une requête ne doit jamais décider seule de son `team_id`.
-- Charger la ressource dans le périmètre d'équipe autorisé, ou vérifier explicitement l'appartenance avant accès.
-- Appliquer le contrôle aux lectures, exports, suppressions et téléchargements de payloads, pas uniquement aux pages de liste.
-- Distinguer le rôle global (administration de plateforme) du rôle d'équipe.
-- Tester un utilisateur membre de l'équipe A qui tente de lire ou modifier une ressource de l'équipe B.
+- A request must never be allowed to determine its own `team_id`.
+- Load resources within the authorized team scope, or explicitly verify team membership before granting access.
+- Enforce authorization on reads, exports, deletions, and payload downloads, not only on listing pages.
+- Distinguish between global roles (platform administration) and team-level roles.
+- Test scenarios where a user who belongs to Team A attempts to read or modify a resource belonging to Team B.
 
 ### 3.3 API Keys
 
-- Affichage unique du secret, stockage du hash uniquement.
-- Stocker un identifiant, un préfixe, un nom, les scopes, les dates d'expiration/révocation et la dernière utilisation.
-- Ne jamais placer la clé dans les logs, traces, URL ou messages d'erreur.
-- Révoquer immédiatement une clé compromise et tracer l'opération.
-- Prévoir une politique de rotation et une procédure de réponse à compromission.
+- Display the secret only once and store only its hash.
+- Store an identifier, prefix, name, scopes, expiration/revocation dates, and last usage timestamp.
+- Never include API keys in logs, traces, URLs, or error messages.
+- Immediately revoke compromised keys and record the operation in the audit trail.
+- Define a key rotation policy and a procedure for responding to key compromises.
 
-### 3.4 Données de replay
+### 3.4 Replay Data
 
-- Définir des règles de redaction dès l'ingestion.
-- Ne pas capturer par défaut les en-têtes d'authentification et cookies.
-- Appliquer un chiffrement en transit et au repos.
-- Contrôler les téléchargements et URLs temporaires d'accès au stockage objet.
-- Prévoir un effacement complet des métadonnées et objets à la fin de la rétention.
-- Isoler les environnements et données selon les équipes.
+- Define redaction rules at ingestion time.
+- Do not capture authentication headers or cookies by default.
+- Enforce encryption in transit and at rest.
+- Control downloads and temporary access URLs for object storage.
+- Ensure complete deletion of metadata and stored objects when retention periods expire.
+- Isolate environments and data according to team ownership.
 
-### 3.5 Fonction de rejeu — si confirmée
+### 3.5 Replay Execution — If Confirmed
 
-- Worker distinct du processus web.
-- Egress réseau restrictif et filtrage SSRF.
-- Blocage loopback, réseaux privés, link-local, services de métadonnées et destinations non autorisées.
-- Revalidation après résolution DNS et redirections.
-- Timeouts, limites de taille, concurrence et budget d'exécution.
-- Confirmation explicite pour les cibles présentant un risque d'effets de bord.
-- Journalisation de la cible, de l'acteur et du résultat sans enregistrer de secrets.
+- Use a worker process separate from the web application.
+- Enforce restrictive network egress rules and SSRF filtering.
+- Block loopback, private networks, link-local addresses, metadata services, and unauthorized destinations.
+- Revalidate destinations after DNS resolution and redirects.
+- Enforce timeouts, size limits, concurrency limits, and execution budgets.
+- Require explicit confirmation for targets that may cause side effects.
+- Log the target, actor, and result without recording secrets.
 
-## 4. Exploitation
+## 4. Operations
 
-### 4.1 Déploiement
+### 4.1 Deployment
 
-Le dépôt ne contient pas encore de Dockerfile applicatif ou de pipeline de livraison. Le compose actuel démarre uniquement PostgreSQL, WhoDB et Mailpit.
+The repository does not yet contain an application Dockerfile or a delivery pipeline. The current Compose configuration only starts PostgreSQL, WhoDB, and Mailpit.
 
-Cible recommandée :
+Recommended target architecture:
 
-- image Node.js non-root et dépendances de production uniquement ;
-- configuration par variables d'environnement / secrets manager ;
-- terminaison TLS en frontal ;
-- processus web stateless ;
-- migration DB dans une étape contrôlée ;
-- workers distincts du processus HTTP ;
-- health checks séparant disponibilité HTTP et dépendances critiques.
+- Non-root Node.js image containing production dependencies only.
+- Configuration through environment variables / a secrets manager.
+- TLS termination at the edge.
+- Stateless web application processes.
+- Database migrations executed as a controlled deployment step.
+- Workers deployed separately from HTTP processes.
+- Health checks that distinguish HTTP availability from critical dependency health.
 
-### 4.2 Logs et métriques
+### 4.2 Logs and Metrics
 
-À collecter :
+The following information should be collected:
 
-- logs applicatifs structurés et identifiant de requête ;
-- taux d'erreur HTTP et latence par endpoint ;
-- taux d'authentification échouée ;
-- volume et latence d'ingestion ;
-- backlog et échecs de workers ;
-- taille du stockage objet et progression de la rétention ;
-- connexions, latence et saturation PostgreSQL.
+- Structured application logs with a request identifier.
+- HTTP error rates and latency per endpoint.
+- Failed authentication rate.
+- Ingestion volume and latency.
+- Worker backlog and failure rates.
+- Object storage size and retention progress.
+- PostgreSQL connections, latency, and resource saturation.
 
-Ne pas tracer les secrets, mots de passe, tokens de reset, API keys, cookies ni corps bruts par défaut.
+Do not log secrets, passwords, password reset tokens, API keys, cookies, or raw request/response bodies by default.
 
-### 4.3 Sauvegarde et restauration
+### 4.3 Backup and Recovery
 
-À définir au niveau produit/exploitation :
+The following must be defined at the product and operations levels:
 
-- RPO et RTO attendus ;
-- sauvegardes PostgreSQL cohérentes et tests de restauration ;
-- versioning ou protection contre l'effacement accidentel du stockage objet ;
-- rétention des sauvegardes et chiffrement ;
-- procédures d'accès d'urgence et de rotation des secrets ;
-- exercice PRA périodique.
+- Expected RPO and RTO.
+- Consistent PostgreSQL backups and restoration tests.
+- Versioning or protection against accidental deletion in object storage.
+- Backup retention and encryption.
+- Emergency access procedures and secret rotation.
+- Periodic disaster recovery exercises.
 
-La cohérence entre métadonnées PostgreSQL et objets S3 doit être traitée : une restauration ne doit pas créer de références vers des payloads absents ni l'inverse.
+Consistency between PostgreSQL metadata and S3 objects must be addressed: a restoration must not create references to missing payloads, or payloads without corresponding metadata.
 
-## 5. Checklist de mise en production
+## 5. Production Readiness Checklist
 
-- [ ] `APP_KEY` forte, unique et conservée dans un gestionnaire de secrets.
-- [ ] Secrets DB/SMTP non présents dans Git ni dans les images.
-- [ ] HTTPS et cookies sécurisés vérifiés derrière le proxy.
-- [ ] CSP testée puis activée.
-- [ ] CORS limité aux origines requises.
-- [ ] CSRF actif sur les routes de session.
-- [ ] Policies appelées sur chaque lecture/écriture métier.
-- [ ] Rate limiting configuré et partagé entre les instances.
-- [ ] Tests d'accès croisé entre équipes.
-- [ ] Tokens de reset stockés sous forme de hash et à usage unique.
-- [ ] Journaux exempts de secrets et de données sensibles.
-- [ ] Limites de taille et de débit de l'API définies.
-- [ ] Sauvegarde et restauration testées.
-- [ ] Health checks et alertes opérationnels.
-- [ ] Tests, lint, typecheck et build exécutés en CI.
-- [ ] Procédure de mise à jour, rollback et migration documentée.
+- [ ] Strong, unique `APP_KEY`, securely stored in a secrets manager.
+- [ ] Database/SMTP secrets are not present in Git or container images.
+- [ ] HTTPS and secure cookies verified behind the reverse proxy.
+- [ ] CSP tested and then enabled.
+- [ ] CORS restricted to the required origins.
+- [ ] CSRF enabled on session-based routes.
+- [ ] Authorization policies enforced on every business read/write operation.
+- [ ] Rate limiting configured and shared across application instances.
+- [ ] Cross-team access isolation tests in place.
+- [ ] Password reset tokens stored as hashes and usable only once.
+- [ ] Logs contain no secrets or sensitive data.
+- [ ] API payload size and rate limits defined.
+- [ ] Backup and restoration procedures tested.
+- [ ] Health checks and operational alerts in place.
+- [ ] Tests, lint, typecheck, and build executed in CI.
+- [ ] Update, rollback, and database migration procedures documented.

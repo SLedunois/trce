@@ -1,20 +1,20 @@
-# Architecture logicielle TRCE
+# TRCE Software Architecture
 
-> Ce document sépare l'architecture **existante** (constatée dans le dépôt) de l'architecture **cible proposée**. Les composants de capture, de stockage des payloads et de rejeu restent à concevoir et à implémenter.
+> This document distinguishes between the **existing architecture** (as observed in the repository) and the **proposed target architecture**. The capture, payload storage, and replay components still need to be designed and implemented.
 
-## 1. Principes directeurs
+## 1. Guiding Principles
 
-- Conserver la stack existante tant qu'un besoin concret ne justifie pas un changement.
-- Commencer par un **monolithe modulaire** AdonisJS plutôt que par des microservices.
-- Isoler les responsabilités métier dans des modules explicites.
-- Faire de `Team` la frontière de sécurité et de propriété des données métier.
-- Séparer les métadonnées relationnelles des payloads volumineux.
-- Concevoir l'ingestion pour supporter des volumes croissants sans rendre la requête synchrone dépendante de traitements coûteux.
-- Traiter le rejeu comme une capacité sensible, exécutée dans un environnement isolé.
+- Keep the existing technology stack unless a concrete requirement justifies a change.
+- Start with an AdonisJS **modular monolith** rather than microservices.
+- Isolate business responsibilities into explicit modules.
+- Make `Team` the security and data ownership boundary for business data.
+- Separate relational metadata from large payloads.
+- Design ingestion to handle increasing volumes without making synchronous requests dependent on expensive processing.
+- Treat replay execution as a sensitive capability that must run in an isolated environment.
 
-## 2. Architecture actuelle — état du dépôt
+## 2. Current Architecture — Repository Status
 
-### 2.1 Vue logique
+### 2.1 Logical Overview
 
 ```mermaid
 flowchart TB
@@ -26,8 +26,8 @@ flowchart TB
     Controllers[Controllers]
     Services[Services]
     Lucid[Lucid ORM]
-    DB[(PostgreSQL par défaut / SQLite)]
-    SMTP[SMTP / Mailpit en local]
+    DB[(PostgreSQL by default / SQLite)]
+    SMTP[SMTP / Mailpit locally]
 
     Browser --> Vite
     Browser <--> Inertia
@@ -39,47 +39,47 @@ flowchart TB
     Controllers --> SMTP
 ```
 
-Le frontend est intégré à l'application AdonisJS via Inertia et Vite. Les pages React sont dans `inertia/pages`, les composants partagés dans `inertia/components` et les styles globaux dans `inertia/css/app.css`.
+The frontend is integrated into the AdonisJS application through Inertia and Vite. React pages are located in `inertia/pages`, shared components in `inertia/components`, and global styles in `inertia/css/app.css`.
 
-### 2.2 Structure utile
+### 2.2 Relevant Directory Structure
 
-| Répertoire | Responsabilité constatée |
+| Directory | Observed responsibility |
 |---|---|
-| `app/controllers` | Contrôleurs HTTP : session, changement et réinitialisation du mot de passe, équipes |
-| `app/models` | Modèles Lucid : User, Team, PasswordResetToken |
-| `app/services` | Services métier ; TeamService existe |
-| `app/policies` | Policies Bouncer ; TeamPolicy existe |
-| `app/validators` | Validateurs VineJS |
-| `app/middleware` | Authentification, session Inertia, Bouncer, changement de mot de passe |
-| `app/transformers` | Sérialisation des modèles vers les props Inertia |
-| `database/migrations` | Schéma relationnel |
-| `inertia/pages` | Pages React rendues par Inertia |
-| `inertia/components/ui` | Bibliothèque de composants d'interface |
-| `config` | Configuration AdonisJS, base, sessions, mail, sécurité |
-| `providers/api_provider.ts` | Sérialiseur JSON partagé, sans endpoint métier identifié à ce stade |
+| `app/controllers` | HTTP controllers: sessions, password changes and resets, teams |
+| `app/models` | Lucid models: User, Team, PasswordResetToken |
+| `app/services` | Business services; TeamService already exists |
+| `app/policies` | Bouncer policies; TeamPolicy already exists |
+| `app/validators` | VineJS validators |
+| `app/middleware` | Authentication, Inertia sessions, Bouncer, password change enforcement |
+| `app/transformers` | Serialization of models into Inertia props |
+| `database/migrations` | Relational database schema |
+| `inertia/pages` | React pages rendered through Inertia |
+| `inertia/components/ui` | UI component library |
+| `config` | AdonisJS, database, sessions, mail, and security configuration |
+| `providers/api_provider.ts` | Shared JSON serializer, with no business endpoint identified at this stage |
 
-### 2.3 Routes actuellement déclarées
+### 2.3 Currently Declared Routes
 
-| Route | Méthode | Contrôle / comportement |
+| Route | Method | Control / behavior |
 |---|---|---|
-| `/login` | GET | Formulaire de connexion, groupe guest |
-| `/login` | POST | Authentification par session |
-| `/forgot-password` | GET / POST | Demande de réinitialisation |
-| `/reset-password/:token` | GET | Présentation du formulaire après vérification du token en base |
-| `/reset-password` | POST | Réinitialisation du mot de passe |
-| `/password/change` | GET / POST | Changement du mot de passe connecté |
-| `/replays` | GET | Page placeholder |
-| `/teams` | GET | Liste des équipes |
-| `/teams` | POST | Création d'équipe |
-| `/teams/:id` | GET | Route déclarée, contrôleur non implémenté |
-| `/teams` | PUT / DELETE | Routes déclarées, contrôleurs non implémentés |
-| `/users` | GET | Page placeholder |
-| `/profile` | GET | Page placeholder |
-| `/logout` | POST | Déconnexion par session |
+| `/login` | GET | Login form, guest-only group |
+| `/login` | POST | Session-based authentication |
+| `/forgot-password` | GET / POST | Password reset request |
+| `/reset-password/:token` | GET | Displays the form after verifying the token in the database |
+| `/reset-password` | POST | Password reset |
+| `/password/change` | GET / POST | Password change for the authenticated user |
+| `/replays` | GET | Placeholder page |
+| `/teams` | GET | Team listing |
+| `/teams` | POST | Team creation |
+| `/teams/:id` | GET | Route declared, controller not implemented |
+| `/teams` | PUT / DELETE | Routes declared, controllers not implemented |
+| `/users` | GET | Placeholder page |
+| `/profile` | GET | Placeholder page |
+| `/logout` | POST | Session-based logout |
 
-Il n'existe pas encore de route API d'ingestion ou de consultation des replays.
+There is currently no API route for ingesting or retrieving replays.
 
-### 2.4 Modèle de données actuel
+### 2.4 Current Data Model
 
 ```mermaid
 erDiagram
@@ -120,30 +120,30 @@ erDiagram
     }
 ```
 
-**Limites constatées :**
+**Identified limitations:**
 
-- `User` et `Team` n'exposent pas encore les relations Lucid `manyToMany` nécessaires à la jointure `users_teams`.
-- La table `users_teams` autorise actuellement des clés étrangères nulles.
-- Le service `TeamService.list()` renvoie toutes les équipes aux administrateurs et une liste vide aux autres utilisateurs ; l'appartenance à une équipe n'est pas encore exploitée.
-- Le modèle de clé API et les modèles Replay n'existent pas.
+- `User` and `Team` do not yet expose the Lucid `manyToMany` relationships required for the `users_teams` pivot table.
+- The `users_teams` table currently allows nullable foreign keys.
+- The `TeamService.list()` method returns all teams to administrators and an empty list to other users; team membership is not yet taken into account.
+- The API key model and Replay models do not exist yet.
 
-## 3. Architecture cible proposée
+## 3. Proposed Target Architecture
 
-### 3.1 Choix : monolithe modulaire
+### 3.1 Approach: Modular Monolith
 
-Le backend reste un seul déploiement AdonisJS, mais le code est organisé par domaines métier. Cette approche permet de garder une exploitation simple au début, tout en préparant des frontières claires pour extraire ultérieurement un worker ou un service d'ingestion si la charge le justifie.
+The backend remains a single AdonisJS deployment, but the code is organized around business domains. This approach keeps operations simple initially while establishing clear boundaries that will make it possible to extract a worker or ingestion service later if workload requirements justify it.
 
 ```mermaid
 flowchart TB
     subgraph Clients
         UI[Web UI React / Inertia]
-        SDK[SDK / applications clientes]
-        CLI[Outils et scripts]
+        SDK[SDK / Client Applications]
+        CLI[Tools and Scripts]
     end
 
-    subgraph Platform[TRCE — plateforme applicative]
+    subgraph Platform[TRCE — Application Platform]
         Web[Web / Inertia]
-        API[API versionnée]
+        API[Versioned API]
         Identity[Identity & Access]
         Teams[Teams & Memberships]
         Keys[API Credentials]
@@ -153,13 +153,13 @@ flowchart TB
         Audit[Audit & Retention]
     end
 
-    subgraph Data[Services de données]
+    subgraph Data[Data Services]
         PG[(PostgreSQL)]
-        Object[(Stockage objet S3 compatible)]
-        Queue[(File de tâches)]
+        Object[(S3-compatible Object Storage)]
+        Queue[(Task Queue)]
     end
 
-    Worker[Worker d'ingestion / rejeu]
+    Worker[Ingestion / Replay Worker]
     SMTP[SMTP]
 
     UI <--> Web
@@ -185,11 +185,11 @@ flowchart TB
     Identity --> SMTP
 ```
 
-`Queue`, stockage objet et worker sont des composants **cibles proposés**, pas des dépendances présentes dans le dépôt.
+`Queue`, object storage, and workers are **proposed target components**, not dependencies currently present in the repository.
 
-### 3.2 Modules backend
+### 3.2 Backend Modules
 
-Organisation suggérée, sans imposer immédiatement une migration physique complète :
+Suggested organization, without immediately requiring a complete physical migration:
 
 ```text
 app/
@@ -215,29 +215,29 @@ app/
   transformers/
 ```
 
-Le découpage peut rester progressif. Il est préférable de ne pas déplacer tout le code actuel avant d'avoir une suite de tests qui sécurise les comportements existants.
+The migration can be gradual. It is preferable not to move all existing code before having a test suite that protects current behavior.
 
-### 3.3 Responsabilités par domaine
+### 3.3 Responsibilities by Domain
 
-| Domaine | Responsabilité |
+| Domain | Responsibility |
 |---|---|
-| Identity | Connexion, sessions, utilisateurs, réinitialisation des mots de passe |
-| Teams | Équipes, membres, rôles, cloisonnement tenant |
-| API Keys | Création, hash, scopes, expiration, révocation, rotation et dernière utilisation |
-| Ingestion | Authentifier le client, valider le contrat, filtrer les données, enregistrer les métadonnées et payloads |
-| Replays | Recherche, pagination, détail, export et règles d'accès |
-| Replay Execution | Exécuter une tentative de rejeu dans un worker isolé et enregistrer son résultat |
-| Audit | Historiser les actions importantes et les événements de sécurité |
-| Retention | Purge automatisée en fonction des politiques de conservation |
+| Identity | Authentication, sessions, users, password resets |
+| Teams | Teams, members, roles, tenant isolation |
+| API Keys | Creation, hashing, scopes, expiration, revocation, rotation, and last usage |
+| Ingestion | Authenticate the client, validate the contract, filter data, and persist metadata and payloads |
+| Replays | Search, pagination, details, export, and access control |
+| Replay Execution | Execute a replay attempt in an isolated worker and record its result |
+| Audit | Record important actions and security events |
+| Retention | Automated purging based on retention policies |
 
-## 4. Flux techniques cibles
+## 4. Target Technical Flows
 
 ### 4.1 Ingestion
 
 ```mermaid
 sequenceDiagram
     participant Client as Client / SDK
-    participant API as API TRCE
+    participant API as TRCE API
     participant Auth as API Key Service
     participant Ingest as Ingestion Service
     participant DB as PostgreSQL
@@ -245,52 +245,52 @@ sequenceDiagram
     participant Q as Queue
 
     Client->>API: POST /api/v1/replays
-    API->>Auth: Vérifier la clé, son état et ses scopes
-    Auth-->>API: Team + autorisations
-    API->>Ingest: Valider et normaliser le payload
-    Ingest->>Ingest: Redaction / limites / contrôles
-    Ingest->>Obj: Stocker les corps volumineux
-    Obj-->>Ingest: Référence objet
-    Ingest->>DB: Enregistrer les métadonnées
-    Ingest->>Q: Publier les traitements secondaires
+    API->>Auth: Verify key, status, and scopes
+    Auth-->>API: Team + permissions
+    API->>Ingest: Validate and normalize payload
+    Ingest->>Ingest: Redaction / limits / checks
+    Ingest->>Obj: Store large request/response bodies
+    Obj-->>Ingest: Object reference
+    Ingest->>DB: Store metadata
+    Ingest->>Q: Publish secondary processing tasks
     API-->>Client: 202 Accepted + replayId
 ```
 
-Principes :
+Principles:
 
-- L'API est versionnée (`/api/v1`).
-- Les métadonnées sont persistées en PostgreSQL.
-- Les corps volumineux sont stockés hors base, dans un stockage objet compatible S3.
-- La réponse d'ingestion ne dépend pas d'un traitement d'analyse ou d'indexation long.
-- L'écriture du message en file doit être fiable : prévoir une transaction outbox si la cohérence PostgreSQL/file est nécessaire.
-- Les limites de taille, formats acceptés, timeouts et quotas doivent être explicites.
+- The API is versioned (`/api/v1`).
+- Metadata is persisted in PostgreSQL.
+- Large request/response bodies are stored outside the database, in S3-compatible object storage.
+- The ingestion response does not depend on long-running analysis or indexing operations.
+- Queue message publishing must be reliable: consider implementing a transactional outbox if PostgreSQL/queue consistency is required.
+- Payload size limits, accepted formats, timeouts, and quotas must be explicitly defined.
 
-Le choix d'un `202 Accepted` suppose que les traitements secondaires sont asynchrones. Il faudra définir le comportement exact de succès d'ingestion avant de figer le contrat.
+Choosing `202 Accepted` assumes that secondary processing is asynchronous. The exact ingestion success semantics must be defined before finalizing the API contract.
 
-### 4.2 Consultation
+### 4.2 Retrieval
 
-Le navigateur appelle le backend via Inertia. Le backend récupère les données en appliquant systématiquement le filtre `team_id` issu du contexte autorisé, et non fourni librement par le client.
+The browser communicates with the backend through Inertia. The backend retrieves data while systematically applying the `team_id` filter derived from the authorized context, rather than one freely provided by the client.
 
-Les endpoints API et les pages web peuvent partager des services métier et des règles d'autorisation, mais ne doivent pas partager leurs formats de représentation par accident.
+API endpoints and web pages may share business services and authorization rules, but their representation formats must not be coupled accidentally.
 
-### 4.3 Rejeu — exigences de sécurité
+### 4.3 Replay Execution — Security Requirements
 
-Le rejeu est une capacité à risque. Le worker devra :
+Replay execution is a potentially dangerous capability. The worker must:
 
-- fonctionner avec une identité et des permissions minimales ;
-- interdire par défaut les adresses privées, link-local, loopback et les métadonnées cloud ;
-- appliquer une allowlist de domaines/cibles ou une politique équivalente ;
-- contrôler DNS, redirections et résolution d'adresse pour éviter les contournements SSRF ;
-- imposer des timeouts, plafonds de taille, quotas et limites de concurrence ;
-- isoler les secrets et ne pas journaliser les tokens/cookies ;
-- demander une action explicite avant une exécution susceptible d'avoir des effets de bord ;
-- enregistrer l'auteur, la cible, la date, le résultat et l'identifiant du replay source.
+- Run with a dedicated identity and minimum permissions.
+- Deny private, link-local, loopback, and cloud metadata addresses by default.
+- Enforce a domain/target allowlist or an equivalent policy.
+- Validate DNS resolution, redirects, and destination IP addresses to prevent SSRF bypasses.
+- Enforce timeouts, payload size limits, quotas, and concurrency limits.
+- Isolate secrets and never log tokens or cookies.
+- Require explicit user action before executing operations that may have side effects.
+- Record the initiator, target, timestamp, result, and source replay identifier.
 
-Il faut aussi déterminer si les replays sont exécutés vers une cible de test uniquement, ou si des environnements de production peuvent être autorisés.
+It must also be determined whether replays can only target test environments or whether production environments may also be authorized.
 
-## 5. Modèle de données cible
+## 5. Target Data Model
 
-Proposition conceptuelle, à valider en fonction du contrat métier :
+Conceptual proposal, to be validated against the business requirements:
 
 ```mermaid
 erDiagram
@@ -369,34 +369,34 @@ erDiagram
     }
 ```
 
-### 5.1 Règles de modélisation
+### 5.1 Data Modeling Rules
 
-- Utiliser des identifiants non prédictibles exposés dans les API (UUID ou ULID) ; les identifiants internes peuvent rester numériques si le besoin est limité à une installation unique.
-- Rendre les clés étrangères obligatoires sauf cas métier explicitement justifié.
-- Ajouter des index sur `team_id`, `captured_at`, `method`, `response_status` et les clés de recherche réellement utilisées.
-- Conserver un `team_id` sur chaque entité métier qui doit être cloisonnée.
-- Éviter de stocker les payloads volumineux dans PostgreSQL.
-- Ne jamais persister une clé API en clair ; conserver uniquement un hash robuste et un préfixe d'identification.
-- Pour les événements volumineux, distinguer les métadonnées de l'objet de contenu.
+- Use non-predictable identifiers exposed through APIs (UUID or ULID); internal identifiers may remain numeric if the requirements are limited to a single installation.
+- Make foreign keys mandatory unless a specific business requirement justifies nullable values.
+- Add indexes on `team_id`, `captured_at`, `method`, `response_status`, and the search keys actually used.
+- Maintain a `team_id` on every business entity that requires tenant isolation.
+- Avoid storing large payloads in PostgreSQL.
+- Never store API keys in plaintext; only retain a strong hash and an identification prefix.
+- For large events, keep metadata separate from the content object.
 
-## 6. Contrats API proposés
+## 6. Proposed API Contracts
 
-Ces routes sont des exemples de conception, pas des routes actuellement implémentées.
+These routes are design examples, not currently implemented routes.
 
-| Méthode | Endpoint cible | Objet |
+| Method | Target endpoint | Purpose |
 |---|---|---|
-| POST | `/api/v1/replays` | Ingérer un échange ou un replay |
-| GET | `/api/v1/replays` | Rechercher et paginer les replays de l'équipe |
-| GET | `/api/v1/replays/:id` | Lire les métadonnées et les références de contenu |
-| DELETE | `/api/v1/replays/:id` | Supprimer selon les droits et la politique de rétention |
-| POST | `/api/v1/replays/:id/executions` | Déclencher un rejeu contrôlé, si retenu |
-| GET | `/api/v1/replays/:id/executions` | Consulter les tentatives de rejeu |
-| POST | `/api/v1/api-keys` | Créer une clé API |
-| DELETE | `/api/v1/api-keys/:id` | Révoquer une clé API |
+| POST | `/api/v1/replays` | Ingest an HTTP exchange or replay |
+| GET | `/api/v1/replays` | Search and paginate the team's replays |
+| GET | `/api/v1/replays/:id` | Retrieve metadata and content references |
+| DELETE | `/api/v1/replays/:id` | Delete according to permissions and retention policy |
+| POST | `/api/v1/replays/:id/executions` | Trigger a controlled replay execution, if retained |
+| GET | `/api/v1/replays/:id/executions` | Retrieve replay execution attempts |
+| POST | `/api/v1/api-keys` | Create an API key |
+| DELETE | `/api/v1/api-keys/:id` | Revoke an API key |
 
-### 6.1 Convention de réponse
+### 6.1 Response Convention
 
-Le provider `providers/api_provider.ts` fournit déjà un sérialiseur qui enveloppe les réponses sous `data`. Il peut servir de base à une convention uniforme, à compléter avec :
+The `providers/api_provider.ts` provider already exposes a serializer that wraps responses under `data`. It can serve as the foundation for a consistent convention, potentially extended with:
 
 ```json
 {
@@ -407,7 +407,7 @@ Le provider `providers/api_provider.ts` fournit déjà un sérialiseur qui envel
 }
 ```
 
-Pour les erreurs, retenir un format stable, documenté, sans exposer les détails internes :
+For errors, use a stable, documented format that does not expose internal implementation details:
 
 ```json
 {
@@ -420,50 +420,50 @@ Pour les erreurs, retenir un format stable, documenté, sans exposer les détail
 }
 ```
 
-Ne pas introduire une enveloppe `meta` ou `error` sans l'implémenter et la tester dans un middleware ou un mécanisme de sérialisation commun.
+Do not introduce a `meta` or `error` envelope without implementing and testing it in shared middleware or a common serialization mechanism.
 
-## 7. Sécurité et isolation
+## 7. Security and Isolation
 
-### 7.1 Frontière d'autorisation
+### 7.1 Authorization Boundary
 
-- Les pages React ne sont jamais une frontière de sécurité.
-- Toute lecture ou écriture d'une ressource doit vérifier l'appartenance à l'équipe et le rôle requis côté backend.
-- Les contrôles d'accès doivent être centralisés dans des policies/services, puis appelés par chaque contrôleur.
-- Un identifiant de ressource fourni par le client ne prouve jamais son appartenance à l'équipe.
+- React pages are never a security boundary.
+- Every resource read or write must verify team membership and the required role on the backend.
+- Access controls must be centralized in policies/services and then invoked by each controller.
+- A resource identifier supplied by the client never proves that the resource belongs to the client's team.
 
 ### 7.2 API Keys
 
-- Génération cryptographiquement sûre.
-- Affichage du secret une seule fois.
-- Hash non réversible du secret en base.
-- Préfixe public pour identifier la clé sans la révéler.
-- Scopes minimaux, date d'expiration et révocation immédiate.
-- Rotation avec période de chevauchement contrôlée si nécessaire.
-- `last_used_at` actualisé sans provoquer une écriture coûteuse à chaque appel (batch/cache éventuel).
-- Rate limiting par clé, équipe et IP selon le contexte.
+- Cryptographically secure key generation.
+- Display the secret only once.
+- Store a non-reversible hash of the secret in the database.
+- Use a public prefix to identify the key without revealing it.
+- Apply minimum required scopes, an expiration date, and immediate revocation.
+- Support rotation with a controlled overlap period when necessary.
+- Update `last_used_at` without triggering an expensive database write on every request (batching or caching may be considered).
+- Apply rate limiting by API key, team, and IP address depending on the context.
 
-### 7.3 Données capturées
+### 7.3 Captured Data
 
-Les requêtes/réponses peuvent contenir des mots de passe, cookies, tokens, données personnelles ou informations métier sensibles. Prévoir :
+Requests and responses may contain passwords, cookies, tokens, personal data, or sensitive business information. The following measures must be considered:
 
-- règles de masquage configurables (headers, champs JSON, paramètres) ;
-- exclusions globales par défaut (`Authorization`, `Cookie`, `Set-Cookie`, secrets connus) ;
-- chiffrement en transit et au repos ;
-- contrôle d'accès fin aux payloads ;
-- tailles maximales et limites de téléchargement ;
-- rétention et suppression vérifiable ;
-- exclusion des secrets des logs, traces et messages d'erreur.
+- Configurable redaction rules (headers, JSON fields, query parameters).
+- Global default exclusions (`Authorization`, `Cookie`, `Set-Cookie`, known secrets).
+- Encryption in transit and at rest.
+- Fine-grained access control for payloads.
+- Maximum payload sizes and download limits.
+- Retention policies and verifiable deletion.
+- Exclusion of secrets from logs, traces, and error messages.
 
-## 8. Déploiement cible
+## 8. Target Deployment Architecture
 
 ```mermaid
 flowchart LR
-    Internet[Clients / Navigateur] --> Edge[Reverse proxy TLS / WAF]
+    Internet[Clients / Browser] --> Edge[TLS Reverse Proxy / WAF]
     Edge --> App1[TRCE Web/API]
     Edge --> App2[TRCE Web/API]
     App1 --> PG[(PostgreSQL HA)]
     App2 --> PG
-    App1 --> S3[(Stockage objet)]
+    App1 --> S3[(Object Storage)]
     App2 --> S3
     App1 --> Q[(Queue)]
     App2 --> Q
@@ -473,57 +473,57 @@ flowchart LR
     W2 --> S3
     W1 --> PG
     W2 --> PG
-    App1 --> SMTP[Relais SMTP]
+    App1 --> SMTP[SMTP Relay]
     App2 --> SMTP
-    App1 --> Obs[Logs / métriques / traces]
+    App1 --> Obs[Logs / Metrics / Traces]
     App2 --> Obs
     W1 --> Obs
     W2 --> Obs
 ```
 
-Composants cible :
+Target components:
 
-- reverse proxy TLS et protection applicative ;
-- instances stateless de l'application ;
-- PostgreSQL avec sauvegardes et mécanisme de restauration testé ;
-- stockage objet compatible S3 pour les payloads ;
-- queue et workers pour l'ingestion différée, la purge et le rejeu ;
-- relais SMTP ;
-- collecte centralisée des logs, métriques et traces.
+- TLS reverse proxy and application-layer protection.
+- Stateless application instances.
+- PostgreSQL with backups and a tested recovery mechanism.
+- S3-compatible object storage for payloads.
+- Queue and workers for deferred ingestion processing, retention cleanup, and replay execution.
+- SMTP relay.
+- Centralized collection of logs, metrics, and traces.
 
-Le choix du fournisseur et le niveau de haute disponibilité sont à dimensionner après définition des volumes, des tailles de payload et des objectifs RPO/RTO.
+The provider and high availability requirements must be sized after defining expected volumes, payload sizes, and RPO/RTO objectives.
 
-## 9. Observabilité
+## 9. Observability
 
-À mettre en place :
+The following capabilities should be implemented:
 
-- logs structurés JSON ;
-- `request_id` propagé aux logs et réponses ;
-- `team_id`, `replay_id` et `api_key_id` sous forme d'identifiants non secrets dans les événements ;
-- métriques d'ingestion (débit, erreurs, latence, taille, backlog) ;
-- métriques des workers (durée, échecs, retries, files) ;
-- métriques de base et stockage ;
-- traces distribuées si plusieurs processus ou services sont introduits.
+- Structured JSON logs.
+- A `request_id` propagated to logs and responses.
+- `team_id`, `replay_id`, and `api_key_id` represented as non-secret identifiers in events.
+- Ingestion metrics (throughput, errors, latency, size, backlog).
+- Worker metrics (duration, failures, retries, queue depth).
+- Database and storage metrics.
+- Distributed tracing if multiple processes or services are introduced.
 
-Ne jamais placer dans les labels de métriques une URL complète, un e-mail, une clé API ou un identifiant à forte cardinalité.
+Never use a complete URL, email address, API key, or high-cardinality identifier as a metric label.
 
-## 10. Décisions d'architecture proposées
+## 10. Proposed Architecture Decisions
 
-| ID | Décision | Motif | Statut |
+| ID | Decision | Rationale | Status |
 |---|---|---|---|
-| ADR-001 | Conserver AdonisJS + React/Inertia | Stack déjà en place et cohérente | À confirmer |
-| ADR-002 | Monolithe modulaire avant microservices | Réduire la complexité d'exploitation initiale | Recommandé |
-| ADR-003 | PostgreSQL pour les métadonnées métier | Transactions, relations, recherche structurée | Recommandé |
-| ADR-004 | Stockage objet pour les corps volumineux | Éviter de gonfler la base relationnelle | À valider selon volumes |
-| ADR-005 | Team comme tenant / périmètre d'autorisation | Correspond à l'organisation déjà amorcée | Recommandé |
-| ADR-006 | API d'ingestion versionnée | Permettre l'évolution des SDK clients | Recommandé |
-| ADR-007 | Worker isolé pour le rejeu | Réduire les risques SSRF et les effets de bord | À valider avec le besoin de rejeu |
+| ADR-001 | Keep AdonisJS + React/Inertia | Existing and consistent technology stack | To be confirmed |
+| ADR-002 | Modular monolith before microservices | Reduce initial operational complexity | Recommended |
+| ADR-003 | Use PostgreSQL for business metadata | Transactions, relationships, structured search | Recommended |
+| ADR-004 | Use object storage for large payloads | Avoid excessive growth of the relational database | To be validated against expected volumes |
+| ADR-005 | Use Team as the tenant / authorization boundary | Consistent with the organization already in place | Recommended |
+| ADR-006 | Version the ingestion API | Allow client SDKs to evolve | Recommended |
+| ADR-007 | Use an isolated worker for replay execution | Reduce SSRF risks and side effects | To be validated against replay requirements |
 
-## 11. Points à traiter avant la mise en œuvre
+## 11. Topics to Address Before Implementation
 
-1. Confirmer la définition métier du replay et la nécessité du rejeu.
-2. Fixer le format d'ingestion et la stratégie de compatibilité.
-3. Définir les volumes, limites, RPO/RTO et rétention.
-4. Définir les rôles d'équipe et les règles d'accès.
-5. Concevoir la protection des données capturées.
-6. Ajouter tests d'autorisation, d'ingestion et de cloisonnement multi-équipe avant d'ouvrir l'API.
+1. Confirm the business definition of a replay and whether replay execution is required.
+2. Define the ingestion format and compatibility strategy.
+3. Define expected volumes, limits, RPO/RTO, and retention policies.
+4. Define team roles and access control rules.
+5. Design the protection mechanisms for captured data.
+6. Add authorization, ingestion, and multi-team isolation tests before exposing the API.

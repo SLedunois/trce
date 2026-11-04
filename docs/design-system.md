@@ -1,253 +1,253 @@
-# TRCE — Design system
+# TRCE — Design System
 
-> Ce document décrit les tokens et composants identifiables dans le dépôt, puis fixe des règles d'usage pour garder une interface cohérente. Les valeurs marquées « recommandation » ne sont pas toutes déjà codées.
+> This document describes the design tokens and components identified in the repository, then establishes usage guidelines to ensure a consistent user interface. Values marked as recommendations have not necessarily been implemented yet.
 
-## 1. Principes visuels
+## 1. Visual Principles
 
-Le produit doit évoquer un outil développeur : précis, lisible, dense sans être chargé, et orienté diagnostic. L'interface existante utilise une base claire, une couleur de marque turquoise/vert, la typographie Inter et des composants sobres.
+The product should feel like a developer tool: precise, readable, information-dense without being cluttered, and focused on diagnostics. The existing interface uses a light foundation, a turquoise/green brand color, Inter typography, and understated components.
 
-Principes :
+Guiding principles:
 
-- priorité à la lisibilité des données et des états ;
-- navigation stable et prévisible ;
-- densité adaptée à des tableaux et des vues techniques ;
-- couleurs utilisées pour porter un sens, pas uniquement décorer ;
-- mêmes composants et mêmes états dans toutes les pages ;
-- responsive sans sacrifier les informations importantes.
+- Prioritize the readability of data and interface states.
+- Provide stable and predictable navigation.
+- Use a level of information density suited to tables and technical views.
+- Use colors to convey meaning, not merely for decoration.
+- Maintain consistent components and states across all pages.
+- Ensure responsive layouts without sacrificing important information.
 
-## 2. Identité de marque
+## 2. Brand Identity
 
 ### 2.1 Logo
 
-Les variantes SVG sont disponibles dans :
+The SVG logo variants are available in:
 
-- `inertia/images/trce-logo.svg` ;
-- `inertia/images/trce-logo-small.svg` ;
-- `trce-logo-v3.svg` à la racine.
+- `inertia/images/trce-logo.svg`;
+- `inertia/images/trce-logo-small.svg`;
+- `trce-logo-v3.svg` at the repository root.
 
-Le logo utilise notamment le turquoise `#00786f`, son accent `#44aca2` et un mot-symbole sombre `#1a0a2e`. Utiliser les fichiers SVG existants plutôt que reconstruire le logo en CSS ou en texte.
+The logo primarily uses turquoise `#00786f`, its accent color `#44aca2`, and a dark wordmark `#1a0a2e`. Use the existing SVG files rather than recreating the logo with CSS or text.
 
-Règles :
+Guidelines:
 
-- version complète dans la sidebar ouverte et sur les écrans d'authentification ;
-- version compacte dans la sidebar réduite ;
-- conserver les proportions et le contraste ;
-- ne pas recolorer le logo à la volée sans variante de marque validée.
+- Use the full version in the expanded sidebar and on authentication screens.
+- Use the compact version in the collapsed sidebar.
+- Preserve proportions and contrast.
+- Do not recolor the logo dynamically without an approved brand variant.
 
-## 3. Couleurs
+## 3. Colors
 
-### 3.1 Tokens actuellement définis
+### 3.1 Currently Defined Tokens
 
-Les valeurs ci-dessous viennent de `inertia/css/app.css`. Les valeurs OKLCH sont la source de vérité de l'implémentation.
+The values below come from `inertia/css/app.css`. The OKLCH values are the source of truth for the implementation.
 
-| Token CSS | Clair | Sombre | Usage |
+| CSS Token | Light | Dark | Usage |
 |---|---|---|---|
-| `--background` | `oklch(1 0 0)` | `oklch(0.148 0.004 228.8)` | Fond global |
-| `--foreground` | `oklch(0.148 0.004 228.8)` | `oklch(0.987 0.002 197.1)` | Texte principal |
-| `--card` | `oklch(1 0 0)` | `oklch(0.218 0.008 223.9)` | Surface des cartes |
-| `--primary` | `oklch(0.511 0.096 186.391)` | `oklch(0.437 0.078 188.216)` | Action principale / accent |
-| `--primary-foreground` | `oklch(0.984 0.014 180.72)` | `oklch(0.984 0.014 180.72)` | Texte sur primaire |
-| `--secondary` | `oklch(0.967 0.001 286.375)` | `oklch(0.274 0.006 286.033)` | Surface secondaire |
-| `--muted` | `oklch(0.963 0.002 197.1)` | `oklch(0.275 0.011 216.9)` | Surface discrète |
-| `--muted-foreground` | `oklch(0.56 0.021 213.5)` | `oklch(0.723 0.014 214.4)` | Texte secondaire |
-| `--accent` | `oklch(0.511 0.096 186.391)` | `oklch(0.437 0.078 188.216)` | Accent interactif |
-| `--destructive` | `oklch(0.577 0.245 27.325)` | `oklch(0.704 0.191 22.216)` | Actions/états destructifs |
-| `--border` | `oklch(0.925 0.005 214.3)` | `oklch(1 0 0 / 10%)` | Bordures |
-| `--input` | `oklch(0.925 0.005 214.3)` | `oklch(1 0 0 / 15%)` | Contours de champs |
-| `--ring` | `oklch(0.723 0.014 214.4)` | `oklch(0.56 0.021 213.5)` | Focus |
+| `--background` | `oklch(1 0 0)` | `oklch(0.148 0.004 228.8)` | Global background |
+| `--foreground` | `oklch(0.148 0.004 228.8)` | `oklch(0.987 0.002 197.1)` | Primary text |
+| `--card` | `oklch(1 0 0)` | `oklch(0.218 0.008 223.9)` | Card surface |
+| `--primary` | `oklch(0.511 0.096 186.391)` | `oklch(0.437 0.078 188.216)` | Primary action / accent |
+| `--primary-foreground` | `oklch(0.984 0.014 180.72)` | `oklch(0.984 0.014 180.72)` | Text on primary |
+| `--secondary` | `oklch(0.967 0.001 286.375)` | `oklch(0.274 0.006 286.033)` | Secondary surface |
+| `--muted` | `oklch(0.963 0.002 197.1)` | `oklch(0.275 0.011 216.9)` | Subtle surface |
+| `--muted-foreground` | `oklch(0.56 0.021 213.5)` | `oklch(0.723 0.014 214.4)` | Secondary text |
+| `--accent` | `oklch(0.511 0.096 186.391)` | `oklch(0.437 0.078 188.216)` | Interactive accent |
+| `--destructive` | `oklch(0.577 0.245 27.325)` | `oklch(0.704 0.191 22.216)` | Destructive actions / states |
+| `--border` | `oklch(0.925 0.005 214.3)` | `oklch(1 0 0 / 10%)` | Borders |
+| `--input` | `oklch(0.925 0.005 214.3)` | `oklch(1 0 0 / 15%)` | Input outlines |
+| `--ring` | `oklch(0.723 0.014 214.4)` | `oklch(0.56 0.021 213.5)` | Focus indicator |
 
-Les tokens de sidebar (`--sidebar*`) et les cinq tokens de graphiques (`--chart-1` à `--chart-5`) sont aussi définis dans la feuille de style. Les couleurs des graphiques sont actuellement une gamme neutre, pas encore une palette catégorielle métier.
+The sidebar tokens (`--sidebar*`) and the five chart tokens (`--chart-1` through `--chart-5`) are also defined in the stylesheet. Chart colors currently use a neutral range rather than a business-specific categorical palette.
 
-### 3.2 Couleurs de statut — convention à appliquer
+### 3.2 Status Colors — Guidelines to Follow
 
-Les composants d'interface doivent s'appuyer sur des couleurs sémantiques et un libellé textuel. Les couleurs ci-dessous décrivent le sens attendu ; elles ne remplacent pas les tokens CSS déjà présents.
+UI components should rely on semantic colors combined with textual labels. The colors below describe the intended meaning; they do not replace the CSS tokens already available.
 
-| Statut | Sens | Présentation recommandée |
+| Status | Meaning | Recommended presentation |
 |---|---|---|
-| Success | Opération terminée correctement | Vert + libellé « Succès » |
-| Warning | Attention requise, action possible | Ambre + explication |
-| Error | Échec ou action bloquante | Rouge + cause/action corrective |
-| Info | Information neutre | Bleu ou accent discret + libellé |
-| Pending | Traitement en cours | Gris/bleu neutre + indicateur de progression |
-| Disabled | Fonction non disponible | Contraste atténué, sans disparaître |
+| Success | Operation completed successfully | Green + "Success" label |
+| Warning | Attention required, action still possible | Amber + explanation |
+| Error | Failure or blocking action | Red + cause / corrective action |
+| Info | Neutral information | Blue or subtle accent + label |
+| Pending | Processing in progress | Neutral gray/blue + progress indicator |
+| Disabled | Feature unavailable | Reduced contrast without disappearing |
 
-Ne jamais exprimer un statut uniquement par la couleur : ajouter texte, icône ou autre indication accessible.
+Never communicate a status through color alone: always add text, an icon, or another accessible indication.
 
-## 4. Typographie
+## 4. Typography
 
-### Existant
+### Existing Implementation
 
-- Famille : **Inter Variable**, importée via `@fontsource-variable/inter`.
-- `--font-sans` utilise Inter Variable.
-- `--font-heading` pointe actuellement vers `--font-sans`.
-- Les boutons utilisent `text-sm` et `font-medium`.
+- Font family: **Inter Variable**, imported through `@fontsource-variable/inter`.
+- `--font-sans` uses Inter Variable.
+- `--font-heading` currently references `--font-sans`.
+- Buttons use `text-sm` and `font-medium`.
 
-### Échelle recommandée
+### Recommended Type Scale
 
-| Usage | Taille indicative | Graisse |
+| Usage | Suggested size | Weight |
 |---|---:|---|
-| Titre de page H1 | 28–32 px | 600–700 |
-| Titre de section H2 | 20–24 px | 600 |
-| Titre de carte H3 | 16–18 px | 600 |
-| Texte courant | 14–16 px | 400 |
-| Libellé de champ | 13–14 px | 500 |
-| Métadonnée / aide | 12–13 px | 400 |
-| Code, IDs, tokens | Police monospace | 400–500 |
+| Page title H1 | 28–32 px | 600–700 |
+| Section heading H2 | 20–24 px | 600 |
+| Card heading H3 | 16–18 px | 600 |
+| Body text | 14–16 px | 400 |
+| Field label | 13–14 px | 500 |
+| Metadata / helper text | 12–13 px | 400 |
+| Code, IDs, tokens | Monospace font | 400–500 |
 
-Cette échelle est une recommandation de design system. Elle doit être traduite en classes ou composants typographiques partagés pour éviter les tailles arbitraires page par page.
+This scale is a design system recommendation. It should be implemented through shared typography classes or components to avoid arbitrary font sizes across individual pages.
 
-## 5. Espacements, dimensions et formes
+## 5. Spacing, Dimensions, and Shapes
 
-### Existant
+### Existing Implementation
 
-- Rayon de base : `--radius: 0.625rem` (10 px).
-- Rayons dérivés : `sm = 0.6 × radius`, `md = 0.8 × radius`, `lg = radius`, `xl = 1.4 × radius`, etc.
-- Bouton par défaut : hauteur Tailwind `h-9` (36 px), taille `sm` : 32 px, `lg` : 40 px.
-- Bouton icône par défaut : 36 × 36 px.
+- Base radius: `--radius: 0.625rem` (10 px).
+- Derived radii: `sm = 0.6 × radius`, `md = 0.8 × radius`, `lg = radius`, `xl = 1.4 × radius`, etc.
+- Default button height: Tailwind `h-9` (36 px), `sm` size: 32 px, `lg` size: 40 px.
+- Default icon button size: 36 × 36 px.
 
-### Recommandation
+### Recommendations
 
-Utiliser une échelle d'espacement basée sur 4 px : 4, 8, 12, 16, 24, 32, 40 et 48 px. Réserver les espacements plus grands aux séparations de zones ou aux marges de page.
+Use a spacing scale based on 4 px: 4, 8, 12, 16, 24, 32, 40, and 48 px. Reserve larger spacing values for separating page sections or defining page margins.
 
-| Élément | Recommandation |
+| Element | Recommendation |
 |---|---|
-| Champ standard | Hauteur 36–40 px |
-| Bouton standard | 36 px, déjà implémenté |
-| Bouton important | 40 px |
-| Rayon champs/boutons | Rayon `md` / `lg` existant |
-| Carte | 16–24 px de padding selon densité |
-| Espacement entre champs | 12–16 px |
-| Espacement entre sections | 24–32 px |
-| Largeur de lecture formulaire | 400–480 px maximum |
+| Standard input | Height: 36–40 px |
+| Standard button | 36 px, already implemented |
+| Prominent button | 40 px |
+| Input/button radius | Existing `md` / `lg` radius |
+| Card | 16–24 px padding depending on information density |
+| Spacing between fields | 12–16 px |
+| Spacing between sections | 24–32 px |
+| Form content width | Maximum 400–480 px |
 
-## 6. Bibliothèque de composants
+## 6. Component Library
 
-Les composants locaux sont regroupés dans `inertia/components/ui`. Ils doivent être privilégiés avant l'introduction d'une nouvelle dépendance ou d'un style isolé.
+Local components are grouped under `inertia/components/ui`. They should be preferred over introducing a new dependency or creating isolated styles.
 
-| Composant disponible | Usage attendu |
+| Available component | Intended usage |
 |---|---|
-| `Button` | Actions primaires, secondaires, discrètes, destructives et lien |
-| `Card` | Regroupement d'informations cohérentes |
-| `Alert` | Message contextuel durable |
-| `Avatar` | Identité d'un utilisateur ou d'un membre |
-| `Breadcrumb` | Repérage dans la navigation |
-| `Dialog` | Confirmation et formulaires courts |
-| `DropdownMenu` | Actions secondaires et menu utilisateur |
-| `Empty` | État sans donnée avec explication et action pertinente |
-| `Field`, `Label`, `Input` | Formulaires accessibles et homogènes |
-| `PasswordInput` | Saisie de mot de passe avec visibilité contrôlable |
-| `Item` | Ligne ou élément de liste |
-| `PageHeader` | Titre de page et actions associées |
-| `Separator` | Séparation visuelle |
-| `Sheet` | Panneau latéral, notamment sur mobile |
-| `Sidebar` | Navigation principale |
-| `Skeleton` | Placeholder pendant un chargement |
-| `Tooltip` | Information complémentaire courte |
-| `Typography` | Styles typographiques partagés |
-| `Messages` | Présentation des messages de formulaire |
+| `Button` | Primary, secondary, subtle, destructive, and link actions |
+| `Card` | Grouping related information |
+| `Alert` | Persistent contextual message |
+| `Avatar` | User or team member identity |
+| `Breadcrumb` | Navigation context |
+| `Dialog` | Confirmations and short forms |
+| `DropdownMenu` | Secondary actions and user menu |
+| `Empty` | Empty state with an explanation and relevant action |
+| `Field`, `Label`, `Input` | Consistent and accessible forms |
+| `PasswordInput` | Password entry with controllable visibility |
+| `Item` | List row or item |
+| `PageHeader` | Page title and associated actions |
+| `Separator` | Visual separation |
+| `Sheet` | Side panel, especially on mobile |
+| `Sidebar` | Main navigation |
+| `Skeleton` | Loading placeholder |
+| `Tooltip` | Short supplementary information |
+| `Typography` | Shared typography styles |
+| `Messages` | Form message presentation |
 
-La base UI combine Base UI React, `class-variance-authority`, Tailwind CSS et Lucide React. Le fichier `components.json` configure le style `base-vega` et les variables CSS.
+The UI foundation combines Base UI React, `class-variance-authority`, Tailwind CSS, and Lucide React. The `components.json` file configures the `base-vega` style and CSS variables.
 
-## 7. Structure des pages
+## 7. Page Structure
 
-### 7.1 Application authentifiée
+### 7.1 Authenticated Application
 
-Le layout `inertia/layouts/default.tsx` assemble :
+The `inertia/layouts/default.tsx` layout assembles:
 
-1. une sidebar de navigation ;
-2. un header avec déclencheur de sidebar et breadcrumbs ;
-3. une zone de contenu ;
-4. des notifications toast via Sonner.
+1. A navigation sidebar.
+2. A header with a sidebar toggle and breadcrumbs.
+3. A content area.
+4. Toast notifications through Sonner.
 
-La navigation actuelle présente les entrées Replays, Teams et Users. Profile est disponible depuis le menu utilisateur.
+The current navigation includes Replays, Teams, and Users. Profile is available from the user menu.
 
-### 7.2 Authentification
+### 7.2 Authentication
 
-Les pages login, forgotten password et password change utilisent un layout distinct sans sidebar. Le logo est centré et le contenu est contenu dans une colonne étroite.
+The login, forgotten password, and password change pages use a separate layout without a sidebar. The logo is centered, and the content is displayed within a narrow column.
 
-### 7.3 Gabarit d'une page métier — recommandé
+### 7.3 Business Page Template — Recommended
 
 ```text
 Page
 ├── PageHeader
-│   ├── Titre + description courte
-│   └── Action primaire (si autorisée)
-├── Barre de filtres / recherche (si nécessaire)
-├── Contenu principal
-│   ├── Skeleton pendant le chargement
-│   ├── Empty avec prochaine action si vide
-│   ├── Liste / tableau / cartes si données
-│   └── Alert si une information durable doit être visible
-└── Pagination / informations de résultat
+│   ├── Title + short description
+│   └── Primary action (if authorized)
+├── Filter / search bar (if needed)
+├── Main content
+│   ├── Skeleton while loading
+│   ├── Empty state with next action if no data
+│   ├── List / table / cards when data is available
+│   └── Alert if persistent information needs to be displayed
+└── Pagination / result information
 ```
 
-Une page doit conserver le même ordre de lecture et ne pas masquer les erreurs de chargement derrière un simple état vide.
+A page must maintain a consistent reading order and must not hide loading errors behind a simple empty state.
 
-## 8. Règles d'interaction
+## 8. Interaction Guidelines
 
-### Boutons
+### Buttons
 
-- Une seule action primaire dominante par zone.
-- `destructive` réservé aux suppressions ou actions irréversibles.
-- `outline`, `secondary` ou `ghost` pour les actions secondaires.
-- Les boutons icônes seuls doivent avoir un nom accessible (`aria-label`).
-- Les actions en cours doivent désactiver le contrôle ou afficher un état de chargement.
+- Use only one dominant primary action per area.
+- Reserve `destructive` for deletions or irreversible actions.
+- Use `outline`, `secondary`, or `ghost` for secondary actions.
+- Icon-only buttons must have an accessible name (`aria-label`).
+- Actions in progress must disable the control or display a loading state.
 
-### Formulaires
+### Forms
 
-- Chaque champ possède un label visible.
-- L'aide et l'erreur sont associées au champ concerné.
-- L'erreur est expliquée en termes compréhensibles et indique comment corriger.
-- Les validations importantes sont répétées côté serveur.
-- Les valeurs sensibles ne sont jamais préremplies ou renvoyées inutilement.
+- Every field must have a visible label.
+- Help text and error messages must be associated with the relevant field.
+- Errors must be explained in understandable terms and indicate how to fix them.
+- Important validations must also be enforced on the server side.
+- Sensitive values must never be pre-filled or unnecessarily returned.
 
-### Tables et listes techniques — recommandation
+### Technical Tables and Lists — Recommendation
 
-Pour les futures pages de replays et de clés API :
+For future replay and API key pages:
 
-- aligner les nombres et durées ;
-- utiliser une police monospace pour les identifiants techniques ;
-- tronquer visuellement les chaînes longues tout en offrant un accès à la valeur complète ;
-- rendre les filtres persistants dans l'URL quand cela améliore le partage ;
-- proposer des états vide, erreur, chargement et aucune correspondance ;
-- éviter les actions destructives directement dans une ligne sans confirmation.
+- Align numbers and durations consistently.
+- Use a monospace font for technical identifiers.
+- Visually truncate long strings while providing access to their complete values.
+- Keep filters persistent in the URL when this improves shareability.
+- Provide empty, error, loading, and no-results states.
+- Avoid placing destructive actions directly in a row without confirmation.
 
-## 9. Accessibilité
+## 9. Accessibility
 
-Objectif : viser WCAG 2.2 AA pour les parcours principaux.
+Goal: aim for WCAG 2.2 AA compliance across the main user journeys.
 
-- Navigation clavier complète et ordre de focus cohérent.
-- Focus visible, non masqué par les overlays.
-- Contraste suffisant entre texte, fond et bordures utiles.
-- Labels explicites et associations `label` / champ.
-- Dialogs avec focus piégé/restauré et fermeture clavier.
-- Icônes décoratives masquées aux lecteurs d'écran ; icônes seules nommées.
-- Statuts annoncés autrement que par la couleur.
-- Respect de `prefers-reduced-motion`.
-- Ne pas utiliser de placeholder comme seul label.
+- Full keyboard navigation and a consistent focus order.
+- Visible focus indicators that are not hidden behind overlays.
+- Sufficient contrast between text, backgrounds, and meaningful borders.
+- Explicit labels and proper `label` / input associations.
+- Dialogs with correctly trapped and restored focus, and keyboard dismissal.
+- Decorative icons hidden from screen readers; standalone icons must have accessible names.
+- Statuses communicated through more than color alone.
+- Respect `prefers-reduced-motion`.
+- Never use a placeholder as the only field label.
 
-## 10. Responsive et densité
+## 10. Responsive Design and Information Density
 
-- Desktop : sidebar persistante, contenu exploitable en largeur, tableaux complets.
-- Tablette : réduire les colonnes secondaires, conserver filtres et actions principales.
-- Mobile : sidebar sous forme de sheet, actions accessibles, listes transformées en cartes si le tableau devient illisible.
-- Les éléments techniques très longs doivent être tronqués ou défilables localement ; éviter le scroll horizontal global.
+- Desktop: persistent sidebar, content that makes effective use of available width, and full tables.
+- Tablet: reduce secondary columns while keeping filters and primary actions accessible.
+- Mobile: use the sidebar as a sheet, keep actions accessible, and convert lists into cards when tables become unreadable.
+- Very long technical values should be truncated or locally scrollable; avoid global horizontal scrolling.
 
-## 11. Dark mode
+## 11. Dark Mode
 
-Les tokens `.dark` sont définis dans `app.css`, mais le dépôt ne montre pas encore de sélecteur utilisateur ni de persistance de préférence. Le dark mode est donc **préparé au niveau CSS**, mais son parcours utilisateur n'est pas confirmé.
+The `.dark` tokens are defined in `app.css`, but the repository does not yet show a user-facing selector or preference persistence. Dark mode is therefore **prepared at the CSS level**, but its user-facing workflow has not been confirmed.
 
-Avant d'annoncer cette fonctionnalité, ajouter :
+Before announcing this feature as available, implement:
 
-- un mécanisme de préférence (système / clair / sombre) ;
-- une persistance de cette préférence ;
-- la vérification de chaque composant et état ;
-- des tests de contraste en clair et en sombre.
+- A preference mechanism (system / light / dark).
+- Persistence of that preference.
+- Verification of every component and UI state.
+- Contrast tests in both light and dark modes.
 
-## 12. Gouvernance du design system
+## 12. Design System Governance
 
-- Ajouter un composant UI partagé avant de dupliquer son style dans plusieurs pages.
-- Utiliser les tokens sémantiques, pas des couleurs arbitraires.
-- Toute nouvelle variante doit être justifiée par un cas d'usage récurrent.
-- Vérifier focus, hover, disabled, loading, error, empty et responsive.
-- Mettre à jour ce document lorsqu'un token ou un pattern est modifié.
+- Add a shared UI component before duplicating its styling across multiple pages.
+- Use semantic tokens rather than arbitrary colors.
+- Every new component variant must be justified by a recurring use case.
+- Verify focus, hover, disabled, loading, error, empty, and responsive states.
+- Update this document whenever a token or pattern is modified.
